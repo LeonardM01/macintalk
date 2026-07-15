@@ -37,6 +37,7 @@
 		B123 /* AudioInputDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F125 /* AudioInputDevice.swift */; };
 		B206 /* SpeechLocaleResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F206 /* SpeechLocaleResolverTests.swift */; };
 		B207 /* DictationShortcutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F207 /* DictationShortcutTests.swift */; };
+		B124 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F126 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +83,7 @@
 		F205 /* WritingStyleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingStyleTests.swift; sourceTree = "<group>"; };
 		F206 /* SpeechLocaleResolverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechLocaleResolverTests.swift; sourceTree = "<group>"; };
 		F207 /* DictationShortcutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationShortcutTests.swift; sourceTree = "<group>"; };
+		F126 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		P101 /* MacinTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacinTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		P102 /* MacinTalkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacinTalkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -201,6 +203,7 @@
 		G018 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F126 /* Assets.xcassets */,
 				F112 /* Info.plist */,
 			);
 			path = Resources;
@@ -341,6 +344,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B124 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -514,6 +518,7 @@
 		C203 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MacinTalk/MacinTalk.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -542,6 +547,7 @@
 		C204 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MacinTalk/MacinTalk.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
