@@ -1,0 +1,497 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B101 /* MacinTalkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F101 /* MacinTalkApp.swift */; };
+		B102 /* DictationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F102 /* DictationState.swift */; };
+		B103 /* DictationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F103 /* DictationCoordinator.swift */; };
+		B104 /* SpeechAnalyzerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F104 /* SpeechAnalyzerService.swift */; };
+		B105 /* AudioBufferConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F105 /* AudioBufferConverter.swift */; };
+		B106 /* FoundationModelCleaner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F106 /* FoundationModelCleaner.swift */; };
+		B107 /* GlobalHotkeyMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F107 /* GlobalHotkeyMonitor.swift */; };
+		B108 /* PasteboardTextInserter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F108 /* PasteboardTextInserter.swift */; };
+		B109 /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F109 /* PermissionManager.swift */; };
+		B110 /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F110 /* SetupView.swift */; };
+		B111 /* MenuBarContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F111 /* MenuBarContent.swift */; };
+		B201 /* MockServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = F201 /* MockServices.swift */; };
+		B202 /* DictationStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F202 /* DictationStateTests.swift */; };
+		B203 /* DictationCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F203 /* DictationCoordinatorTests.swift */; };
+		B204 /* FoundationModelCleanerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F204 /* FoundationModelCleanerTests.swift */; };
+		B301 /* MacinTalk.app in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = P101 /* MacinTalk.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C101 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = R001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = T101;
+			remoteInfo = MacinTalk;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		F101 /* MacinTalkApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacinTalkApp.swift; sourceTree = "<group>"; };
+		F102 /* DictationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationState.swift; sourceTree = "<group>"; };
+		F103 /* DictationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationCoordinator.swift; sourceTree = "<group>"; };
+		F104 /* SpeechAnalyzerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechAnalyzerService.swift; sourceTree = "<group>"; };
+		F105 /* AudioBufferConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioBufferConverter.swift; sourceTree = "<group>"; };
+		F106 /* FoundationModelCleaner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationModelCleaner.swift; sourceTree = "<group>"; };
+		F107 /* GlobalHotkeyMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotkeyMonitor.swift; sourceTree = "<group>"; };
+		F108 /* PasteboardTextInserter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteboardTextInserter.swift; sourceTree = "<group>"; };
+		F109 /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
+		F110 /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
+		F111 /* MenuBarContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarContent.swift; sourceTree = "<group>"; };
+		F112 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F113 /* MacinTalk.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacinTalk.entitlements; sourceTree = "<group>"; };
+		F201 /* MockServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServices.swift; sourceTree = "<group>"; };
+		F202 /* DictationStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationStateTests.swift; sourceTree = "<group>"; };
+		F203 /* DictationCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationCoordinatorTests.swift; sourceTree = "<group>"; };
+		F204 /* FoundationModelCleanerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationModelCleanerTests.swift; sourceTree = "<group>"; };
+		P101 /* MacinTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacinTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		P102 /* MacinTalkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacinTalkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		X101 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		X102 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		G001 = {
+			isa = PBXGroup;
+			children = (
+				G010 /* MacinTalk */,
+				G020 /* MacinTalkTests */,
+				G030 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		G010 /* MacinTalk */ = {
+			isa = PBXGroup;
+			children = (
+				G011 /* App */,
+				G012 /* Speech */,
+				G013 /* Intelligence */,
+				G014 /* Input */,
+				G015 /* Insertion */,
+				G016 /* System */,
+				G017 /* UI */,
+				G018 /* Resources */,
+				F113 /* MacinTalk.entitlements */,
+			);
+			path = MacinTalk;
+			sourceTree = "<group>";
+		};
+		G011 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				F101 /* MacinTalkApp.swift */,
+				F102 /* DictationState.swift */,
+				F103 /* DictationCoordinator.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		G012 /* Speech */ = {
+			isa = PBXGroup;
+			children = (
+				F104 /* SpeechAnalyzerService.swift */,
+				F105 /* AudioBufferConverter.swift */,
+			);
+			path = Speech;
+			sourceTree = "<group>";
+		};
+		G013 /* Intelligence */ = {
+			isa = PBXGroup;
+			children = (
+				F106 /* FoundationModelCleaner.swift */,
+			);
+			path = Intelligence;
+			sourceTree = "<group>";
+		};
+		G014 /* Input */ = {
+			isa = PBXGroup;
+			children = (
+				F107 /* GlobalHotkeyMonitor.swift */,
+			);
+			path = Input;
+			sourceTree = "<group>";
+		};
+		G015 /* Insertion */ = {
+			isa = PBXGroup;
+			children = (
+				F108 /* PasteboardTextInserter.swift */,
+			);
+			path = Insertion;
+			sourceTree = "<group>";
+		};
+		G016 /* System */ = {
+			isa = PBXGroup;
+			children = (
+				F109 /* PermissionManager.swift */,
+			);
+			path = System;
+			sourceTree = "<group>";
+		};
+		G017 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				F110 /* SetupView.swift */,
+				F111 /* MenuBarContent.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		G018 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F112 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		G020 /* MacinTalkTests */ = {
+			isa = PBXGroup;
+			children = (
+				G021 /* TestSupport */,
+				F202 /* DictationStateTests.swift */,
+				F203 /* DictationCoordinatorTests.swift */,
+				F204 /* FoundationModelCleanerTests.swift */,
+			);
+			path = MacinTalkTests;
+			sourceTree = "<group>";
+		};
+		G021 /* TestSupport */ = {
+			isa = PBXGroup;
+			children = (
+				F201 /* MockServices.swift */,
+			);
+			path = TestSupport;
+			sourceTree = "<group>";
+		};
+		G030 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				P101 /* MacinTalk.app */,
+				P102 /* MacinTalkTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		T101 /* MacinTalk */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = L201 /* Build configuration list for PBXNativeTarget "MacinTalk" */;
+			buildPhases = (
+				S101 /* Sources */,
+				X101 /* Frameworks */,
+				R101 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MacinTalk;
+			packageProductDependencies = (
+			);
+			productName = MacinTalk;
+			productReference = P101 /* MacinTalk.app */;
+			productType = "com.apple.product-type.application";
+		};
+		T102 /* MacinTalkTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = L202 /* Build configuration list for PBXNativeTarget "MacinTalkTests" */;
+			buildPhases = (
+				S102 /* Sources */,
+				X102 /* Frameworks */,
+				R102 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D101 /* PBXTargetDependency */,
+			);
+			name = MacinTalkTests;
+			packageProductDependencies = (
+			);
+			productName = MacinTalkTests;
+			productReference = P102 /* MacinTalkTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		R001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					T101 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					T102 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = T101;
+					};
+				};
+			};
+			buildConfigurationList = L101 /* Build configuration list for PBXProject "MacinTalk" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = G001;
+			productRefGroup = G030 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				T101 /* MacinTalk */,
+				T102 /* MacinTalkTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		R101 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		R102 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		S101 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B101 /* MacinTalkApp.swift in Sources */,
+				B102 /* DictationState.swift in Sources */,
+				B103 /* DictationCoordinator.swift in Sources */,
+				B104 /* SpeechAnalyzerService.swift in Sources */,
+				B105 /* AudioBufferConverter.swift in Sources */,
+				B106 /* FoundationModelCleaner.swift in Sources */,
+				B107 /* GlobalHotkeyMonitor.swift in Sources */,
+				B108 /* PasteboardTextInserter.swift in Sources */,
+				B109 /* PermissionManager.swift in Sources */,
+				B110 /* SetupView.swift in Sources */,
+				B111 /* MenuBarContent.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		S102 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B201 /* MockServices.swift in Sources */,
+				B202 /* DictationStateTests.swift in Sources */,
+				B203 /* DictationCoordinatorTests.swift in Sources */,
+				B204 /* FoundationModelCleanerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D101 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = T101 /* MacinTalk */;
+			targetProxy = C101 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		C201 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		C202 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		C203 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = MacinTalk/MacinTalk.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = MacinTalk/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.macintalk.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		C204 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = MacinTalk/MacinTalk.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = MacinTalk/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.macintalk.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		C205 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.macintalk.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MacinTalk.app/Contents/MacOS/MacinTalk";
+			};
+			name = Debug;
+		};
+		C206 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.macintalk.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MacinTalk.app/Contents/MacOS/MacinTalk";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		L101 /* Build configuration list for PBXProject "MacinTalk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C201 /* Debug */,
+				C202 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		L201 /* Build configuration list for PBXNativeTarget "MacinTalk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C203 /* Debug */,
+				C204 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		L202 /* Build configuration list for PBXNativeTarget "MacinTalkTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C205 /* Debug */,
+				C206 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = R001 /* Project object */;
+}
