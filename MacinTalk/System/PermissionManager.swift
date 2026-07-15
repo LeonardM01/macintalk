@@ -4,20 +4,26 @@ import CoreGraphics
 import Foundation
 
 final class PermissionManager: PermissionChecking {
-    private let locale: Locale
+    private let preferredLocale: Locale
 
-    init(locale: Locale = .current) {
-        self.locale = locale
+    init(preferredLocale: Locale = .current) {
+        self.preferredLocale = preferredLocale
     }
 
     func readinessSnapshot() async -> PermissionReadiness {
-        PermissionReadiness(
+        let resolution = await SpeechLocaleResolver.resolve(preferred: preferredLocale)
+        let assetsInstalled = await SpeechReadinessChecker.assetsInstalled(for: resolution.locale)
+
+        return PermissionReadiness(
             microphoneGranted: microphoneGranted(),
             inputMonitoringGranted: CGPreflightListenEventAccess(),
             postEventGranted: CGPreflightPostEventAccess(),
-            speechLocaleSupported: await SpeechReadinessChecker.localeSupported(locale),
-            speechAssetsInstalled: await SpeechReadinessChecker.assetsInstalled(locale),
-            appleIntelligenceAvailable: AppleIntelligenceReadiness.isAvailable
+            speechLocaleSupported: true,
+            speechAssetsInstalled: assetsInstalled,
+            appleIntelligenceAvailable: AppleIntelligenceReadiness.isAvailable,
+            speechLocaleLabel: resolution.displayName,
+            speechLocaleUsesFallback: resolution.isUsingFallback,
+            preferredLocaleLabel: resolution.preferredLocale.identifier(.bcp47)
         )
     }
 

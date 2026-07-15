@@ -24,6 +24,8 @@
 	<true/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>MacinTalk needs microphone access to transcribe your speech into text.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>MacinTalk uses on-device speech recognition to transcribe your voice.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>

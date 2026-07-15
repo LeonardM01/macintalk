@@ -1,3 +1,4 @@
+import AppKit
 import Foundation
 
 protocol SpeechTranscribing: Sendable {
@@ -10,17 +11,19 @@ protocol SpeechTranscribing: Sendable {
 
 protocol TranscriptCleaning: Sendable {
     var isAvailable: Bool { get }
-    func prewarm() async
-    func clean(_ transcript: String) async -> String
+    func prewarm(style: WritingStyle) async
+    func clean(_ transcript: String, style: WritingStyle) async -> String
 }
 
-protocol TextInserting: Sendable {
-    func insert(_ text: String) throws
+protocol TextInserting: AnyObject {
+    func insert(_ text: String, activating application: NSRunningApplication?) throws
+    func copyToClipboard(_ text: String) throws
 }
 
 protocol HotkeyMonitoring: AnyObject {
     var onHotkeyPressed: (() -> Void)? { get set }
     var onHotkeyReleased: (() -> Void)? { get set }
+    func configure(shortcut: DictationShortcut)
     func start() throws
     func stop()
 }
@@ -39,6 +42,9 @@ struct PermissionReadiness: Equatable, Sendable {
     var speechLocaleSupported: Bool
     var speechAssetsInstalled: Bool
     var appleIntelligenceAvailable: Bool
+    var speechLocaleLabel: String = "English (United States)"
+    var speechLocaleUsesFallback: Bool = false
+    var preferredLocaleLabel: String = Locale.current.identifier(.bcp47)
 
     var isReadyForDictation: Bool {
         microphoneGranted
@@ -53,8 +59,8 @@ struct PermissionReadiness: Equatable, Sendable {
         if !microphoneGranted { issues.append("Grant microphone access") }
         if !inputMonitoringGranted { issues.append("Grant Input Monitoring access") }
         if !postEventGranted { issues.append("Grant Accessibility (Post Event) access") }
-        if !speechLocaleSupported { issues.append("Current locale is not supported for speech recognition") }
-        if !speechAssetsInstalled { issues.append("Speech recognition assets need to be downloaded") }
+        if !speechLocaleSupported { issues.append("Speech recognition is not available on this Mac") }
+        if !speechAssetsInstalled { issues.append("Download speech recognition assets") }
         return issues
     }
 }
@@ -63,27 +69,41 @@ struct PermissionReadiness: Equatable, Sendable {
 @Observable
 final class DictationCoordinator {
     private(set) var snapshot = DictationSnapshot.initial
+    private(set) var isPreparingSpeechAssets = false
 
     private let speechService: any SpeechTranscribing
     private let cleaner: any TranscriptCleaning
     private let inserter: any TextInserting
     private let hotkeyMonitor: any HotkeyMonitoring
     private let permissions: any PermissionChecking
+    private let settings: AppSettings
+    private var historyStore: (any TranscriptionHistoryStoring)?
 
     private var sessionTask: Task<Void, Never>?
+    private var isStartingRecording = false
+    private var stopRequestedWhileStarting = false
+    private var insertionTargetApp: NSRunningApplication?
 
     init(
         speechService: any SpeechTranscribing,
         cleaner: any TranscriptCleaning,
         inserter: any TextInserting,
         hotkeyMonitor: any HotkeyMonitoring,
-        permissions: any PermissionChecking
+        permissions: any PermissionChecking,
+        settings: AppSettings,
+        historyStore: (any TranscriptionHistoryStoring)? = nil
     ) {
         self.speechService = speechService
         self.cleaner = cleaner
         self.inserter = inserter
         self.hotkeyMonitor = hotkeyMonitor
         self.permissions = permissions
+        self.settings = settings
+        self.historyStore = historyStore
+    }
+
+    func setHistoryStore(_ store: any TranscriptionHistoryStoring) {
+        historyStore = store
     }
 
     func start() async {
@@ -95,12 +115,30 @@ final class DictationCoordinator {
         }
 
         do {
-            try hotkeyMonitor.start()
-            snapshot.statusMessage = "Hold Control+Option+Space to dictate"
+            try restartHotkeyMonitor()
         } catch {
             snapshot.phase = .failed(.inputMonitoringDenied)
             snapshot.statusMessage = "Could not start global hotkey monitor"
         }
+    }
+
+    func restartHotkeyMonitor() throws {
+        hotkeyMonitor.configure(shortcut: settings.dictationShortcut)
+        hotkeyMonitor.stop()
+        try hotkeyMonitor.start()
+        snapshot.statusMessage = settings.dictationShortcut.promptMessage
+    }
+
+    func applyShortcutChange() {
+        do {
+            try restartHotkeyMonitor()
+        } catch {
+            snapshot.statusMessage = "Could not update shortcut: Input Monitoring may be required"
+        }
+    }
+
+    func applyInputDeviceChange() {
+        snapshot.statusMessage = "Microphone updated. Applies to the next dictation."
     }
 
     func stop() {
@@ -114,11 +152,19 @@ final class DictationCoordinator {
     }
 
     func prepareIfNeeded() async {
+        isPreparingSpeechAssets = true
+        defer { isPreparingSpeechAssets = false }
+
         do {
             try await speechService.prepare()
-            snapshot.statusMessage = "Ready"
+            if !isBusyPhase(snapshot.phase) {
+                snapshot.phase = .idle
+            }
+            snapshot.statusMessage = settings.dictationShortcut.promptMessage
         } catch {
-            snapshot.phase = .failed(mapSpeechError(error))
+            if !isBusyPhase(snapshot.phase) {
+                snapshot.phase = .idle
+            }
             snapshot.statusMessage = error.localizedDescription
         }
     }
@@ -132,7 +178,12 @@ final class DictationCoordinator {
     }
 
     private func handleHotkeyPressed() {
-        guard snapshot.phase == .idle || snapshot.phase == .failed(.emptyTranscript) else { return }
+        switch snapshot.phase {
+        case .recording, .cleaning, .inserting:
+            return
+        default:
+            break
+        }
 
         sessionTask?.cancel()
         sessionTask = Task { @MainActor in
@@ -141,15 +192,26 @@ final class DictationCoordinator {
     }
 
     private func handleHotkeyReleased() {
-        guard snapshot.phase == .recording else { return }
+        guard snapshot.phase == .recording || isStartingRecording else { return }
 
-        sessionTask?.cancel()
-        sessionTask = Task { @MainActor in
+        if isStartingRecording {
+            stopRequestedWhileStarting = true
+        }
+
+        Task { @MainActor in
             await finishRecording()
         }
     }
 
     private func beginRecording() async {
+        guard !isStartingRecording, snapshot.phase != .recording else { return }
+
+        isStartingRecording = true
+        defer { isStartingRecording = false }
+
+        insertionTargetApp = NSWorkspace.shared.frontmostApplication
+        stopRequestedWhileStarting = false
+
         let readiness = await permissions.readinessSnapshot()
         guard readiness.isReadyForDictation else {
             snapshot.phase = .failed(.notReady(readiness.blockingIssues.joined(separator: ", ")))
@@ -157,17 +219,28 @@ final class DictationCoordinator {
             return
         }
 
-        snapshot = DictationSnapshot(
-            phase: .recording,
-            stableTranscript: "",
-            volatileTranscript: "",
-            statusMessage: "Listening…"
-        )
+        snapshot.statusMessage = "Starting…"
 
-        await cleaner.prewarm()
+        await cleaner.prewarm(style: settings.writingStyle)
+        if stopRequestedWhileStarting {
+            resetAfterCancelledStart()
+            return
+        }
 
         do {
             try await speechService.startRecording()
+            if stopRequestedWhileStarting {
+                try? await speechService.stopRecording()
+                resetAfterCancelledStart()
+                return
+            }
+
+            snapshot = DictationSnapshot(
+                phase: .recording,
+                stableTranscript: "",
+                volatileTranscript: "",
+                statusMessage: "Listening…"
+            )
             updateTranscriptFromService()
             startTranscriptObservation()
         } catch {
@@ -177,6 +250,16 @@ final class DictationCoordinator {
     }
 
     private func finishRecording() async {
+        if isStartingRecording {
+            stopRequestedWhileStarting = true
+            while isStartingRecording {
+                try? await Task.sleep(for: .milliseconds(25))
+            }
+            guard snapshot.phase == .recording else { return }
+        } else {
+            guard snapshot.phase == .recording else { return }
+        }
+
         snapshot.phase = .cleaning
         snapshot.statusMessage = "Cleaning transcript…"
 
@@ -184,29 +267,79 @@ final class DictationCoordinator {
             let rawTranscript = try await speechService.stopRecording()
             let trimmed = rawTranscript.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !trimmed.isEmpty else {
-                snapshot = DictationSnapshot.initial
-                snapshot.phase = .failed(.emptyTranscript)
-                snapshot.statusMessage = "No speech detected"
+                resetAfterCancelledStart()
                 return
             }
 
             snapshot.stableTranscript = trimmed
             snapshot.volatileTranscript = ""
 
-            let cleaned = await cleaner.clean(trimmed)
+            let cleaned = await cleaner.clean(trimmed, style: settings.writingStyle)
             let output = cleaned.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? trimmed : cleaned
+
+            var historyID: UUID?
+            var historyStatusMessage: String?
+            if let historyStore {
+                do {
+                    historyID = try historyStore.save(
+                        rawText: trimmed,
+                        cleanedText: output,
+                        style: settings.writingStyle
+                    )
+                } catch {
+                    historyStatusMessage = "Could not save to history: \(error.localizedDescription)"
+                }
+            }
 
             snapshot.phase = .inserting
             snapshot.statusMessage = "Inserting text…"
 
-            try inserter.insert(output)
-
-            snapshot = DictationSnapshot.initial
-            snapshot.statusMessage = "Inserted text"
+            do {
+                let insertionTarget = InsertionTargetResolver.externalTarget(from: insertionTargetApp)
+                if let insertionTarget {
+                    try inserter.insert(output, activating: insertionTarget)
+                } else {
+                    try inserter.copyToClipboard(output)
+                }
+                if let historyID, let historyStore {
+                    do {
+                        try historyStore.markInsertionResult(id: historyID, succeeded: true, errorMessage: nil)
+                    } catch {
+                        historyStatusMessage = "Text inserted, but history update failed: \(error.localizedDescription)"
+                    }
+                }
+                snapshot = DictationSnapshot.initial
+                if let historyStatusMessage {
+                    snapshot.statusMessage = historyStatusMessage
+                } else if insertionTarget == nil {
+                    snapshot.statusMessage = "Copied to clipboard"
+                } else {
+                    snapshot.statusMessage = "Inserted text"
+                }
+            } catch {
+                if let historyID, let historyStore {
+                    do {
+                        try historyStore.markInsertionResult(
+                            id: historyID,
+                            succeeded: false,
+                            errorMessage: error.localizedDescription
+                        )
+                    } catch {
+                        historyStatusMessage = "Insertion failed and history update failed: \(error.localizedDescription)"
+                    }
+                }
+                snapshot.phase = .failed(mapFinishError(error))
+                snapshot.statusMessage = historyStatusMessage ?? error.localizedDescription
+            }
         } catch {
             snapshot.phase = .failed(mapFinishError(error))
             snapshot.statusMessage = error.localizedDescription
         }
+    }
+
+    private func resetAfterCancelledStart() {
+        snapshot = DictationSnapshot.initial
+        snapshot.statusMessage = settings.dictationShortcut.promptMessage
     }
 
     func updateTranscriptFromService() {
@@ -237,11 +370,21 @@ final class DictationCoordinator {
         }
         return .speechRecognitionFailed(error.localizedDescription)
     }
+
+    private func isBusyPhase(_ phase: DictationPhase) -> Bool {
+        switch phase {
+        case .recording, .cleaning, .inserting:
+            true
+        default:
+            false
+        }
+    }
 }
 
 enum TextInsertionError: LocalizedError {
     case postEventAccessDenied
     case pasteFailed
+    case clipboardCopyFailed
 
     var errorDescription: String? {
         switch self {
@@ -249,6 +392,27 @@ enum TextInsertionError: LocalizedError {
             "Accessibility permission is required to paste into other apps."
         case .pasteFailed:
             "Failed to simulate paste command."
+        case .clipboardCopyFailed:
+            "Failed to copy transcription to the clipboard."
         }
+    }
+}
+
+enum InsertionTargetResolver {
+    static func externalTarget(
+        from application: NSRunningApplication?,
+        ownBundleIdentifier: String? = Bundle.main.bundleIdentifier
+    ) -> NSRunningApplication? {
+        guard let application else { return nil }
+        guard application.bundleIdentifier != ownBundleIdentifier else { return nil }
+        return application
+    }
+
+    static func shouldPasteExternally(
+        targetBundleIdentifier: String?,
+        ownBundleIdentifier: String?
+    ) -> Bool {
+        guard let targetBundleIdentifier else { return false }
+        return targetBundleIdentifier != ownBundleIdentifier
     }
 }

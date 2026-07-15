@@ -21,6 +21,14 @@ A native macOS menu-bar dictation utility that transcribes speech on-device with
 
 ## Usage
 
+### Opening the app
+
+- Build and run in Xcode, or launch MacinTalk from Applications after archiving.
+- The **main window** opens automatically on launch with a sidebar: **Home** and **Settings**.
+- The **menu bar icon** stays available after closing the window. Use **Open MacinTalk** from the menu to reopen it.
+
+### Dictating
+
 Hold **Control + Option + Space**, speak, then release. MacinTalk will:
 
 1. Transcribe your speech locally with SpeechAnalyzer
@@ -28,6 +36,17 @@ Hold **Control + Option + Space**, speak, then release. MacinTalk will:
 3. Paste the result into the previously focused app via clipboard + Cmd+V
 
 If Apple Intelligence is unavailable, the raw transcript is pasted instead.
+
+### Home
+
+- See live dictation status and partial transcript while recording.
+- Browse previous transcriptions (raw + cleaned text) stored locally on your Mac.
+- Copy, delete, or clear history from the detail pane.
+
+### Settings
+
+- Choose a cleanup style: **Casual**, **Balanced**, or **Business**.
+- Manage permissions and speech asset setup.
 
 ## Limitations (MVP)
 

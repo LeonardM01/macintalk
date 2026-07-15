@@ -10,8 +10,13 @@ final class GlobalHotkeyMonitor: HotkeyMonitoring, @unchecked Sendable {
     private var eventTap: CFMachPort?
     private var runLoopSource: CFRunLoopSource?
     private var isHotkeyHeld = false
+    private var shortcut = DictationShortcut.default
 
-    private let spaceKeyCode: CGKeyCode = 49
+    func configure(shortcut: DictationShortcut) {
+        stateLock.lock()
+        self.shortcut = shortcut
+        stateLock.unlock()
+    }
 
     func start() throws {
         guard CGPreflightListenEventAccess() || CGRequestListenEventAccess() else {
@@ -65,14 +70,11 @@ final class GlobalHotkeyMonitor: HotkeyMonitoring, @unchecked Sendable {
             return Unmanaged.passUnretained(event)
         }
 
-        let keyCode = CGKeyCode(event.getIntegerValueField(.keyboardEventKeycode))
-        guard keyCode == spaceKeyCode else {
-            return Unmanaged.passUnretained(event)
-        }
+        stateLock.lock()
+        let shortcut = self.shortcut
+        stateLock.unlock()
 
-        let flags = event.flags
-        let hasModifiers = flags.contains(.maskControl) && flags.contains(.maskAlternate)
-        guard hasModifiers else {
+        guard shortcut.matches(event: event) else {
             if type == .keyUp {
                 dispatchReleaseIfHeld()
             }
@@ -82,7 +84,7 @@ final class GlobalHotkeyMonitor: HotkeyMonitoring, @unchecked Sendable {
         if type == .keyDown {
             let isRepeat = event.getIntegerValueField(.keyboardEventAutorepeat) != 0
             guard !isRepeat else {
-                return Unmanaged.passUnretained(event)
+                return nil
             }
 
             stateLock.lock()
@@ -100,7 +102,7 @@ final class GlobalHotkeyMonitor: HotkeyMonitoring, @unchecked Sendable {
             dispatchReleaseIfHeld()
         }
 
-        return Unmanaged.passUnretained(event)
+        return nil
     }
 
     private func dispatchReleaseIfHeld() {

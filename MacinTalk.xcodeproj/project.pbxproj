@@ -18,11 +18,25 @@
 		B109 /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F109 /* PermissionManager.swift */; };
 		B110 /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F110 /* SetupView.swift */; };
 		B111 /* MenuBarContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F111 /* MenuBarContent.swift */; };
+		B112 /* WritingStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F114 /* WritingStyle.swift */; };
+		B113 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F115 /* AppSettings.swift */; };
+		B114 /* TranscriptionRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = F116 /* TranscriptionRecord.swift */; };
+		B115 /* TranscriptionHistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F117 /* TranscriptionHistoryStore.swift */; };
+		B116 /* MainWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F118 /* MainWindowView.swift */; };
+		B117 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F119 /* HomeView.swift */; };
+		B118 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F120 /* SettingsView.swift */; };
 		B201 /* MockServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = F201 /* MockServices.swift */; };
 		B202 /* DictationStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F202 /* DictationStateTests.swift */; };
 		B203 /* DictationCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F203 /* DictationCoordinatorTests.swift */; };
 		B204 /* FoundationModelCleanerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F204 /* FoundationModelCleanerTests.swift */; };
-		B301 /* MacinTalk.app in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = P101 /* MacinTalk.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B205 /* WritingStyleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F205 /* WritingStyleTests.swift */; };
+		B119 /* SpeechLocaleResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F121 /* SpeechLocaleResolver.swift */; };
+		B120 /* DictationShortcut.swift in Sources */ = {isa = PBXBuildFile; fileRef = F122 /* DictationShortcut.swift */; };
+		B121 /* ShortcutRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F123 /* ShortcutRecorderView.swift */; };
+		B122 /* MicrophoneCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = F124 /* MicrophoneCapture.swift */; };
+		B123 /* AudioInputDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F125 /* AudioInputDevice.swift */; };
+		B206 /* SpeechLocaleResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F206 /* SpeechLocaleResolverTests.swift */; };
+		B207 /* DictationShortcutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F207 /* DictationShortcutTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,10 +63,25 @@
 		F111 /* MenuBarContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarContent.swift; sourceTree = "<group>"; };
 		F112 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F113 /* MacinTalk.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacinTalk.entitlements; sourceTree = "<group>"; };
+		F114 /* WritingStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingStyle.swift; sourceTree = "<group>"; };
+		F115 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		F116 /* TranscriptionRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionRecord.swift; sourceTree = "<group>"; };
+		F117 /* TranscriptionHistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionHistoryStore.swift; sourceTree = "<group>"; };
+		F118 /* MainWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowView.swift; sourceTree = "<group>"; };
+		F119 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		F120 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F121 /* SpeechLocaleResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechLocaleResolver.swift; sourceTree = "<group>"; };
+		F122 /* DictationShortcut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationShortcut.swift; sourceTree = "<group>"; };
+		F123 /* ShortcutRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutRecorderView.swift; sourceTree = "<group>"; };
+		F124 /* MicrophoneCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneCapture.swift; sourceTree = "<group>"; };
+		F125 /* AudioInputDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputDevice.swift; sourceTree = "<group>"; };
 		F201 /* MockServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServices.swift; sourceTree = "<group>"; };
 		F202 /* DictationStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationStateTests.swift; sourceTree = "<group>"; };
 		F203 /* DictationCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationCoordinatorTests.swift; sourceTree = "<group>"; };
 		F204 /* FoundationModelCleanerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationModelCleanerTests.swift; sourceTree = "<group>"; };
+		F205 /* WritingStyleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingStyleTests.swift; sourceTree = "<group>"; };
+		F206 /* SpeechLocaleResolverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechLocaleResolverTests.swift; sourceTree = "<group>"; };
+		F207 /* DictationShortcutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationShortcutTests.swift; sourceTree = "<group>"; };
 		P101 /* MacinTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacinTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		P102 /* MacinTalkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacinTalkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -90,6 +119,8 @@
 				G011 /* App */,
 				G012 /* Speech */,
 				G013 /* Intelligence */,
+				G019 /* History */,
+				G022 /* Settings */,
 				G014 /* Input */,
 				G015 /* Insertion */,
 				G016 /* System */,
@@ -115,6 +146,9 @@
 			children = (
 				F104 /* SpeechAnalyzerService.swift */,
 				F105 /* AudioBufferConverter.swift */,
+				F121 /* SpeechLocaleResolver.swift */,
+				F124 /* MicrophoneCapture.swift */,
+				F125 /* AudioInputDevice.swift */,
 			);
 			path = Speech;
 			sourceTree = "<group>";
@@ -154,6 +188,10 @@
 		G017 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				F118 /* MainWindowView.swift */,
+				F119 /* HomeView.swift */,
+				F120 /* SettingsView.swift */,
+				F123 /* ShortcutRecorderView.swift */,
 				F110 /* SetupView.swift */,
 				F111 /* MenuBarContent.swift */,
 			);
@@ -168,6 +206,15 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		G019 /* History */ = {
+			isa = PBXGroup;
+			children = (
+				F116 /* TranscriptionRecord.swift */,
+				F117 /* TranscriptionHistoryStore.swift */,
+			);
+			path = History;
+			sourceTree = "<group>";
+		};
 		G020 /* MacinTalkTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -175,6 +222,9 @@
 				F202 /* DictationStateTests.swift */,
 				F203 /* DictationCoordinatorTests.swift */,
 				F204 /* FoundationModelCleanerTests.swift */,
+				F205 /* WritingStyleTests.swift */,
+				F206 /* SpeechLocaleResolverTests.swift */,
+				F207 /* DictationShortcutTests.swift */,
 			);
 			path = MacinTalkTests;
 			sourceTree = "<group>";
@@ -185,6 +235,16 @@
 				F201 /* MockServices.swift */,
 			);
 			path = TestSupport;
+			sourceTree = "<group>";
+		};
+		G022 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				F114 /* WritingStyle.swift */,
+				F115 /* AppSettings.swift */,
+				F122 /* DictationShortcut.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		G030 /* Products */ = {
@@ -246,7 +306,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2600;
-				LastUpgradeCheck = 2600;
+				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					T101 = {
 						CreatedOnToolsVersion = 26.0;
@@ -265,6 +325,7 @@
 				Base,
 			);
 			mainGroup = G001;
+			preferredProjectObjectVersion = 77;
 			productRefGroup = G030 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -302,12 +363,24 @@
 				B103 /* DictationCoordinator.swift in Sources */,
 				B104 /* SpeechAnalyzerService.swift in Sources */,
 				B105 /* AudioBufferConverter.swift in Sources */,
+				B119 /* SpeechLocaleResolver.swift in Sources */,
+				B122 /* MicrophoneCapture.swift in Sources */,
+				B123 /* AudioInputDevice.swift in Sources */,
 				B106 /* FoundationModelCleaner.swift in Sources */,
 				B107 /* GlobalHotkeyMonitor.swift in Sources */,
 				B108 /* PasteboardTextInserter.swift in Sources */,
 				B109 /* PermissionManager.swift in Sources */,
 				B110 /* SetupView.swift in Sources */,
 				B111 /* MenuBarContent.swift in Sources */,
+				B112 /* WritingStyle.swift in Sources */,
+				B113 /* AppSettings.swift in Sources */,
+				B120 /* DictationShortcut.swift in Sources */,
+				B114 /* TranscriptionRecord.swift in Sources */,
+				B115 /* TranscriptionHistoryStore.swift in Sources */,
+				B116 /* MainWindowView.swift in Sources */,
+				B117 /* HomeView.swift in Sources */,
+				B118 /* SettingsView.swift in Sources */,
+				B121 /* ShortcutRecorderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,6 +392,9 @@
 				B202 /* DictationStateTests.swift in Sources */,
 				B203 /* DictationCoordinatorTests.swift in Sources */,
 				B204 /* FoundationModelCleanerTests.swift in Sources */,
+				B205 /* WritingStyleTests.swift in Sources */,
+				B206 /* SpeechLocaleResolverTests.swift in Sources */,
+				B207 /* DictationShortcutTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,20 +417,47 @@
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 6.0;
@@ -369,12 +472,39 @@
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 6.0;
@@ -388,10 +518,15 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = R58UQ3LPDX;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = MacinTalk/Resources/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MacinTalk;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -411,10 +546,15 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = R58UQ3LPDX;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = MacinTalk/Resources/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MacinTalk;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -433,7 +573,8 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = R58UQ3LPDX;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.macintalk.app.tests;
@@ -450,7 +591,8 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = R58UQ3LPDX;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.macintalk.app.tests;

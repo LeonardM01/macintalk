@@ -1,17 +1,15 @@
+import AppKit
+import SwiftData
 import SwiftUI
 
 @main
 struct MacinTalkApp: App {
-    @Environment(\.openWindow) private var openWindow
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
-    @State private var coordinator = DictationCoordinator(
-        speechService: SpeechAnalyzerService(),
-        cleaner: FoundationModelCleaner(),
-        inserter: PasteboardTextInserter(),
-        hotkeyMonitor: GlobalHotkeyMonitor(),
-        permissions: PermissionManager()
-    )
+    private let modelContainer: ModelContainer
 
+    @State private var settings = AppSettings()
+    @State private var coordinator: DictationCoordinator
     @State private var readiness = PermissionReadiness(
         microphoneGranted: false,
         inputMonitoringGranted: false,
@@ -23,23 +21,81 @@ struct MacinTalkApp: App {
 
     @State private var didLaunchSetup = false
 
+    init() {
+        let container = (try? ModelContainerFactory.makePersistent())
+            ?? (try! ModelContainerFactory.makeInMemory())
+        modelContainer = container
+
+        let appSettings = AppSettings()
+        let historyStore = SwiftDataTranscriptionHistoryStore(modelContext: container.mainContext)
+        _settings = State(wrappedValue: appSettings)
+        _coordinator = State(
+            initialValue: DictationCoordinator(
+                speechService: SpeechAnalyzerService(settings: appSettings),
+                cleaner: FoundationModelCleaner(),
+                inserter: PasteboardTextInserter(),
+                hotkeyMonitor: GlobalHotkeyMonitor(),
+                permissions: PermissionManager(),
+                settings: appSettings,
+                historyStore: historyStore
+            )
+        )
+    }
+
     var body: some Scene {
         MenuBarExtra("MacinTalk", systemImage: menuBarIcon) {
             MenuBarContent(
                 coordinator: coordinator,
                 readiness: readiness,
                 onRefresh: { Task { await refreshReadiness() } },
-                onQuit: { NSApplication.shared.terminate(nil) }
+                onQuit: { NSApplication.shared.terminate(nil) },
+                onLaunch: {
+                    await refreshReadinessOnLaunch()
+                },
+                shouldOpenSetup: { !didLaunchSetup && !readiness.isReadyForDictation },
+                onDidOpenSetup: { didLaunchSetup = true }
             )
-            .task {
-                await refreshReadinessOnLaunch()
-            }
         }
         .menuBarExtraStyle(.window)
+
+        WindowGroup("MacinTalk", id: "main") {
+            MainWindowView(
+                coordinator: coordinator,
+                settings: settings,
+                readiness: readiness,
+                onRefreshReadiness: { Task { await refreshReadiness() } },
+                onRequestMicrophone: {
+                    Task {
+                        _ = await PermissionManager().requestMicrophoneAccess()
+                        await refreshReadiness()
+                    }
+                },
+                onRequestInputMonitoring: {
+                    _ = PermissionManager().requestInputMonitoringAccess()
+                    Task { await refreshReadiness() }
+                },
+                onRequestPostEvent: {
+                    _ = PermissionManager().requestPostEventAccess()
+                    Task { await refreshReadiness() }
+                },
+                onPrepareSpeechAssets: {
+                    Task {
+                        await coordinator.prepareIfNeeded()
+                        await refreshReadiness()
+                    }
+                }
+            )
+            .modelContainer(modelContainer)
+        }
+        .defaultLaunchBehavior(.presented)
+        .commands {
+            SidebarCommands()
+        }
 
         Window("MacinTalk Setup", id: "setup") {
             SetupView(
                 readiness: readiness,
+                isPreparingSpeechAssets: coordinator.isPreparingSpeechAssets,
                 onRequestMicrophone: {
                     Task {
                         _ = await PermissionManager().requestMicrophoneAccess()
@@ -65,6 +121,7 @@ struct MacinTalkApp: App {
                 }
             )
         }
+        .defaultLaunchBehavior(.suppressed)
     }
 
     private var menuBarIcon: String {
@@ -86,15 +143,16 @@ struct MacinTalkApp: App {
         await coordinator.start()
         await coordinator.prepareIfNeeded()
         await refreshReadiness()
-
-        if !readiness.isReadyForDictation, !didLaunchSetup {
-            didLaunchSetup = true
-            openWindow(id: "setup")
-        }
     }
 
     @MainActor
     private func refreshReadiness() async {
         readiness = await coordinator.refreshReadiness()
+    }
+}
+
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        NSApp.activate(ignoringOtherApps: true)
     }
 }

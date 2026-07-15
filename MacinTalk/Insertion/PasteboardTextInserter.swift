@@ -21,10 +21,6 @@ struct PasteboardSnapshot: Equatable {
     }
 
     func restore(to pasteboard: NSPasteboard) {
-        guard pasteboard.changeCount == changeCount + 1 || pasteboard.changeCount == changeCount else {
-            return
-        }
-
         pasteboard.clearContents()
         guard !items.isEmpty else { return }
 
@@ -40,23 +36,32 @@ struct PasteboardSnapshot: Equatable {
 }
 
 final class PasteboardTextInserter: TextInserting {
-    func insert(_ text: String) throws {
+    private let pasteDelay: TimeInterval = 0.05
+
+    func insert(_ text: String, activating application: NSRunningApplication?) throws {
         guard CGPreflightPostEventAccess() || CGRequestPostEventAccess() else {
             throw TextInsertionError.postEventAccessDenied
         }
 
-        let pasteboard = NSPasteboard.general
-        let snapshot = PasteboardSnapshot.capture(from: pasteboard)
+        application?.activate(options: [.activateIgnoringOtherApps])
+        Thread.sleep(forTimeInterval: pasteDelay)
 
-        pasteboard.clearContents()
-        guard pasteboard.setString(text, forType: .string) else {
-            throw TextInsertionError.pasteFailed
-        }
+        try writeToClipboard(text)
 
+        Thread.sleep(forTimeInterval: pasteDelay)
         try simulateCommandV()
+    }
 
-        if pasteboard.string(forType: .string) == text {
-            snapshot.restore(to: pasteboard)
+    func copyToClipboard(_ text: String) throws {
+        try writeToClipboard(text)
+    }
+
+    private func writeToClipboard(_ text: String) throws {
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.declareTypes([.string], owner: nil)
+        guard pasteboard.setString(text, forType: .string) else {
+            throw TextInsertionError.clipboardCopyFailed
         }
     }
 
@@ -67,12 +72,13 @@ final class PasteboardTextInserter: TextInserting {
         keyDown?.flags = .maskCommand
         keyUp?.flags = .maskCommand
         keyDown?.post(tap: .cghidEventTap)
+        Thread.sleep(forTimeInterval: 0.01)
         keyUp?.post(tap: .cghidEventTap)
     }
 }
 
-enum PasteboardRestorePolicy {
-    static func shouldRestore(snapshot: PasteboardSnapshot, currentChangeCount: Int, insertedText: String, currentText: String?) -> Bool {
-        currentText == insertedText
+enum ClipboardRetentionPolicy {
+    static func retainsInsertedTextAfterPaste() -> Bool {
+        true
     }
 }

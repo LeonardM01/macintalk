@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 struct MenuBarContent: View {
@@ -6,6 +7,9 @@ struct MenuBarContent: View {
     let readiness: PermissionReadiness
     let onRefresh: () -> Void
     let onQuit: () -> Void
+    let onLaunch: () async -> Void
+    let shouldOpenSetup: () -> Bool
+    let onDidOpenSetup: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -25,7 +29,13 @@ struct MenuBarContent: View {
 
             Divider()
 
+            Button("Open MacinTalk") {
+                NSApp.activate(ignoringOtherApps: true)
+                openWindow(id: "main")
+            }
+
             Button("Setup…") {
+                NSApp.activate(ignoringOtherApps: true)
                 openWindow(id: "setup")
             }
 
@@ -47,6 +57,14 @@ struct MenuBarContent: View {
             Button("Quit MacinTalk", action: onQuit)
         }
         .padding(8)
+        .task {
+            await onLaunch()
+            if shouldOpenSetup() {
+                onDidOpenSetup()
+                NSApp.activate(ignoringOtherApps: true)
+                openWindow(id: "setup")
+            }
+        }
     }
 
     private var statusTitle: String {

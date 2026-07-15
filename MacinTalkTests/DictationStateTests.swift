@@ -34,29 +34,81 @@ struct HotkeyEdgeHandlerTests {
     }
 }
 
-struct PasteboardRestorePolicyTests {
-    @Test func shouldRestoreWhenInsertedTextStillPresent() {
-        let snapshot = PasteboardSnapshot(changeCount: 1, items: [])
+struct InsertionTargetResolverTests {
+    @Test func pastesExternallyOnlyForNonSelfTargets() {
         #expect(
-            PasteboardRestorePolicy.shouldRestore(
-                snapshot: snapshot,
-                currentChangeCount: 2,
-                insertedText: "hello",
-                currentText: "hello"
+            InsertionTargetResolver.shouldPasteExternally(
+                targetBundleIdentifier: "com.apple.TextEdit",
+                ownBundleIdentifier: "com.macintalk.app"
+            )
+        )
+        #expect(
+            !InsertionTargetResolver.shouldPasteExternally(
+                targetBundleIdentifier: "com.macintalk.app",
+                ownBundleIdentifier: "com.macintalk.app"
+            )
+        )
+        #expect(
+            !InsertionTargetResolver.shouldPasteExternally(
+                targetBundleIdentifier: nil,
+                ownBundleIdentifier: "com.macintalk.app"
+            )
+        )
+    }
+}
+
+struct ClipboardRetentionPolicyTests {
+    @Test func retainsInsertedTextAfterPaste() {
+        #expect(ClipboardRetentionPolicy.retainsInsertedTextAfterPaste())
+    }
+}
+
+struct MicrophoneConfigurationTests {
+    @Test func defaultDeviceRequiresInitialConfiguration() {
+        #expect(
+            MicrophoneCapture.needsConfiguration(
+                configuredKey: nil,
+                selectedDeviceID: nil
+            )
+        )
+        #expect(
+            !MicrophoneCapture.needsConfiguration(
+                configuredKey: MicrophoneCapture.configurationKey(for: nil),
+                selectedDeviceID: nil
             )
         )
     }
 
-    @Test func shouldNotRestoreWhenClipboardChanged() {
-        let snapshot = PasteboardSnapshot(changeCount: 1, items: [])
+    @Test func explicitDeviceChangeRequiresReconfiguration() {
         #expect(
-            !PasteboardRestorePolicy.shouldRestore(
-                snapshot: snapshot,
-                currentChangeCount: 2,
-                insertedText: "hello",
-                currentText: "different"
+            MicrophoneCapture.needsConfiguration(
+                configuredKey: MicrophoneCapture.defaultDeviceConfigurationKey,
+                selectedDeviceID: "usb-mic"
             )
         )
+    }
+}
+
+struct SpeechAudioPipelineStateTests {
+    @Test func recordsFirstConversionFailureOnly() {
+        let state = SpeechAudioPipelineState()
+        state.noteConversionFailure(AudioBufferConverterError.conversionFailed)
+        state.noteConversionFailure(AudioBufferConverterError.failedToCreateConverter)
+
+        let snapshot = state.snapshot()
+        #expect(snapshot.receivedSample == false)
+        #expect(snapshot.conversionFailure is AudioBufferConverterError)
+    }
+
+    @Test func resetClearsPipelineState() {
+        let state = SpeechAudioPipelineState()
+        state.noteSuccessfulSample()
+        state.noteConversionFailure(AudioBufferConverterError.conversionFailed)
+        state.reset()
+
+        let snapshot = state.snapshot()
+        #expect(snapshot.receivedSample == false)
+        #expect(snapshot.conversionFailure == nil)
     }
 }
 
