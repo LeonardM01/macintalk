@@ -9,29 +9,37 @@ struct ShortcutRecorderView: View {
     @State private var monitor: Any?
 
     var body: some View {
-        HStack(spacing: 12) {
-            Text(shortcut.displayString)
-                .font(.body.monospaced())
-                .padding(.horizontal, 10)
-                .padding(.vertical, 6)
-                .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 6))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 6)
-                        .stroke(isRecording ? Color.accentColor : Color.clear, lineWidth: 2)
-                )
+        HStack(spacing: 10) {
+            ShortcutKeycapsView(shortcut: shortcut)
 
-            Button(isRecording ? "Press shortcut…" : "Change") {
+            Button {
                 if isRecording {
                     stopRecording()
                 } else {
                     startRecording()
                 }
+            } label: {
+                Text(isRecording ? "Press keys…" : "Change")
+                    .font(.system(size: 11.5, weight: .medium))
+                    .foregroundStyle(isRecording ? AppTheme.accentLight : AppTheme.textPrimary)
+                    .padding(.horizontal, 13)
+                    .padding(.vertical, 6)
+                    .background(isRecording ? AppTheme.accent.opacity(0.15) : Color.white.opacity(0.09))
+                    .clipShape(RoundedRectangle(cornerRadius: 7, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 7, style: .continuous)
+                            .stroke(isRecording ? AppTheme.accent.opacity(0.4) : Color.white.opacity(0.12), lineWidth: 1)
+                    )
             }
+            .buttonStyle(.plain)
 
             Button("Reset") {
                 shortcut = .default
                 onShortcutChanged()
             }
+            .buttonStyle(.plain)
+            .font(.system(size: 11.5))
+            .foregroundStyle(AppTheme.textSecondary)
             .disabled(shortcut == .default)
         }
         .onDisappear {
