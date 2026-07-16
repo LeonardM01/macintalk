@@ -33,6 +33,13 @@
 		B124 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F126 /* Assets.xcassets */; };
 		B125 /* UsageStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = F127 /* UsageStats.swift */; };
 		B126 /* HistoryGrouping.swift in Sources */ = {isa = PBXBuildFile; fileRef = F128 /* HistoryGrouping.swift */; };
+		B127 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F129 /* AppTheme.swift */; };
+		B128 /* GlassCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F130 /* GlassCard.swift */; };
+		B129 /* KeycapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F131 /* KeycapView.swift */; };
+		B130 /* StylePill.swift in Sources */ = {isa = PBXBuildFile; fileRef = F132 /* StylePill.swift */; };
+		B131 /* AccentButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F133 /* AccentButtonStyle.swift */; };
+		B132 /* DictationOrb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F134 /* DictationOrb.swift */; };
+		B133 /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F135 /* ToastView.swift */; };
 		B201 /* MockServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = F201 /* MockServices.swift */; };
 		B202 /* DictationStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F202 /* DictationStateTests.swift */; };
 		B203 /* DictationCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F203 /* DictationCoordinatorTests.swift */; };
@@ -83,6 +90,13 @@
 		F126 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F127 /* UsageStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageStats.swift; sourceTree = "<group>"; };
 		F128 /* HistoryGrouping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryGrouping.swift; sourceTree = "<group>"; };
+		F129 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
+		F130 /* GlassCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassCard.swift; sourceTree = "<group>"; };
+		F131 /* KeycapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeycapView.swift; sourceTree = "<group>"; };
+		F132 /* StylePill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StylePill.swift; sourceTree = "<group>"; };
+		F133 /* AccentButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccentButtonStyle.swift; sourceTree = "<group>"; };
+		F134 /* DictationOrb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationOrb.swift; sourceTree = "<group>"; };
+		F135 /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		F201 /* MockServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServices.swift; sourceTree = "<group>"; };
 		F202 /* DictationStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationStateTests.swift; sourceTree = "<group>"; };
 		F203 /* DictationCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationCoordinatorTests.swift; sourceTree = "<group>"; };
@@ -204,6 +218,7 @@
 				F123 /* ShortcutRecorderView.swift */,
 				F110 /* SetupView.swift */,
 				F111 /* MenuBarContent.swift */,
+				G023 /* DesignSystem */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -250,6 +265,20 @@
 				F201 /* MockServices.swift */,
 			);
 			path = TestSupport;
+			sourceTree = "<group>";
+		};
+		G023 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				F129 /* AppTheme.swift */,
+				F130 /* GlassCard.swift */,
+				F131 /* KeycapView.swift */,
+				F132 /* StylePill.swift */,
+				F133 /* AccentButtonStyle.swift */,
+				F134 /* DictationOrb.swift */,
+				F135 /* ToastView.swift */,
+			);
+			path = DesignSystem;
 			sourceTree = "<group>";
 		};
 		G022 /* Settings */ = {
@@ -399,6 +428,13 @@
 				B121 /* ShortcutRecorderView.swift in Sources */,
 				B125 /* UsageStats.swift in Sources */,
 				B126 /* HistoryGrouping.swift in Sources */,
+				B127 /* AppTheme.swift in Sources */,
+				B128 /* GlassCard.swift in Sources */,
+				B129 /* KeycapView.swift in Sources */,
+				B130 /* StylePill.swift in Sources */,
+				B131 /* AccentButtonStyle.swift in Sources */,
+				B132 /* DictationOrb.swift in Sources */,
+				B133 /* ToastView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
