@@ -2,23 +2,28 @@ import SwiftUI
 
 struct ToastView: View {
     let message: String
+    var isSuccess: Bool = true
+
+    private var tint: Color {
+        isSuccess ? AppTheme.success : AppTheme.danger
+    }
 
     var body: some View {
         HStack(spacing: 6) {
-            Image(systemName: "checkmark")
+            Image(systemName: isSuccess ? "checkmark" : "exclamationmark.triangle.fill")
                 .font(.system(size: 11, weight: .semibold))
             Text(message)
                 .font(.system(size: 12.5, weight: .medium))
         }
-        .foregroundStyle(AppTheme.success)
+        .foregroundStyle(tint)
         .padding(.horizontal, 18)
         .padding(.vertical, 8)
         .background(.ultraThinMaterial)
-        .background(AppTheme.success.opacity(0.14))
+        .background(tint.opacity(0.14))
         .clipShape(Capsule())
         .overlay(
             Capsule()
-                .strokeBorder(AppTheme.success.opacity(0.35), lineWidth: 1)
+                .strokeBorder(tint.opacity(0.35), lineWidth: 1)
         )
         .transition(
             .asymmetric(

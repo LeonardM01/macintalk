@@ -10,32 +10,56 @@ struct HomeView: View {
 
     @Query(sort: \TranscriptionRecord.createdAt, order: .reverse) private var records: [TranscriptionRecord]
 
-    var body: some View {
-        VStack(spacing: 0) {
-            Spacer()
+    @State private var activeToastEvent: InsertionEvent?
+    @State private var toastDismissTask: Task<Void, Never>?
 
-            VStack(spacing: 16) {
-                switch coordinator.snapshot.phase {
-                case .idle:
-                    idleContent
-                case .recording:
-                    recordingContent
-                case .cleaning, .inserting:
-                    busyContent
-                case .failed:
-                    failedContent
+    var body: some View {
+        ZStack(alignment: .bottom) {
+            VStack(spacing: 0) {
+                Spacer()
+
+                VStack(spacing: 16) {
+                    switch coordinator.snapshot.phase {
+                    case .idle:
+                        idleContent
+                    case .recording:
+                        recordingContent
+                    case .cleaning, .inserting:
+                        busyContent
+                    case .failed:
+                        failedContent
+                    }
+                }
+                .offset(y: -14)
+
+                Spacer()
+
+                if !recentRecords.isEmpty {
+                    recentList
                 }
             }
-            .offset(y: -14)
 
-            Spacer()
-
-            if !recentRecords.isEmpty {
-                recentList
+            if let activeToastEvent {
+                ToastView(message: activeToastEvent.message, isSuccess: activeToastEvent.succeeded)
+                    .padding(.bottom, 22)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(escapeShortcut)
+        .onChange(of: coordinator.lastInsertionEvent) { _, newValue in
+            guard let newValue else { return }
+            toastDismissTask?.cancel()
+            withAnimation(.easeOut(duration: 0.25)) {
+                activeToastEvent = newValue
+            }
+            toastDismissTask = Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(1600))
+                guard !Task.isCancelled else { return }
+                withAnimation(.easeOut(duration: 0.25)) {
+                    activeToastEvent = nil
+                }
+            }
+        }
     }
 
     private var recentRecords: [TranscriptionRecord] {
@@ -100,7 +124,7 @@ struct HomeView: View {
                 .tracking(-0.3)
                 .foregroundStyle(AppTheme.textPrimary)
 
-            Text("Release \(settings.dictationShortcut.displayString) or click Stop to insert")
+            Text("Release \(settings.dictationShortcut.displayString) or click Stop to insert · Esc to cancel")
                 .font(.system(size: 13))
                 .foregroundStyle(AppTheme.textSecondary)
 

@@ -40,6 +40,8 @@
 		B131 /* AccentButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F133 /* AccentButtonStyle.swift */; };
 		B132 /* DictationOrb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F134 /* DictationOrb.swift */; };
 		B133 /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F135 /* ToastView.swift */; };
+		B134 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F136 /* HistoryView.swift */; };
+		B135 /* PermissionsPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137 /* PermissionsPanelView.swift */; };
 		B201 /* MockServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = F201 /* MockServices.swift */; };
 		B202 /* DictationStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F202 /* DictationStateTests.swift */; };
 		B203 /* DictationCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F203 /* DictationCoordinatorTests.swift */; };
@@ -97,6 +99,8 @@
 		F133 /* AccentButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccentButtonStyle.swift; sourceTree = "<group>"; };
 		F134 /* DictationOrb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationOrb.swift; sourceTree = "<group>"; };
 		F135 /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
+		F136 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		F137 /* PermissionsPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsPanelView.swift; sourceTree = "<group>"; };
 		F201 /* MockServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServices.swift; sourceTree = "<group>"; };
 		F202 /* DictationStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationStateTests.swift; sourceTree = "<group>"; };
 		F203 /* DictationCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationCoordinatorTests.swift; sourceTree = "<group>"; };
@@ -214,7 +218,9 @@
 			children = (
 				F118 /* MainWindowView.swift */,
 				F119 /* HomeView.swift */,
+				F136 /* HistoryView.swift */,
 				F120 /* SettingsView.swift */,
+				F137 /* PermissionsPanelView.swift */,
 				F123 /* ShortcutRecorderView.swift */,
 				F110 /* SetupView.swift */,
 				F111 /* MenuBarContent.swift */,
@@ -435,6 +441,8 @@
 				B131 /* AccentButtonStyle.swift in Sources */,
 				B132 /* DictationOrb.swift in Sources */,
 				B133 /* ToastView.swift in Sources */,
+				B134 /* HistoryView.swift in Sources */,
+				B135 /* PermissionsPanelView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
