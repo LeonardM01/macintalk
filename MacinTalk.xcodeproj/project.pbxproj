@@ -42,6 +42,7 @@
 		B133 /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F135 /* ToastView.swift */; };
 		B134 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F136 /* HistoryView.swift */; };
 		B135 /* PermissionsPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137 /* PermissionsPanelView.swift */; };
+		B136 /* ShortcutKeycapsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F138 /* ShortcutKeycapsView.swift */; };
 		B201 /* MockServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = F201 /* MockServices.swift */; };
 		B202 /* DictationStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F202 /* DictationStateTests.swift */; };
 		B203 /* DictationCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F203 /* DictationCoordinatorTests.swift */; };
@@ -101,6 +102,7 @@
 		F135 /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		F136 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		F137 /* PermissionsPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsPanelView.swift; sourceTree = "<group>"; };
+		F138 /* ShortcutKeycapsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutKeycapsView.swift; sourceTree = "<group>"; };
 		F201 /* MockServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServices.swift; sourceTree = "<group>"; };
 		F202 /* DictationStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationStateTests.swift; sourceTree = "<group>"; };
 		F203 /* DictationCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationCoordinatorTests.swift; sourceTree = "<group>"; };
@@ -279,6 +281,7 @@
 				F129 /* AppTheme.swift */,
 				F130 /* GlassCard.swift */,
 				F131 /* KeycapView.swift */,
+				F138 /* ShortcutKeycapsView.swift */,
 				F132 /* StylePill.swift */,
 				F133 /* AccentButtonStyle.swift */,
 				F134 /* DictationOrb.swift */,
@@ -443,6 +446,7 @@
 				B133 /* ToastView.swift in Sources */,
 				B134 /* HistoryView.swift in Sources */,
 				B135 /* PermissionsPanelView.swift in Sources */,
+				B136 /* ShortcutKeycapsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

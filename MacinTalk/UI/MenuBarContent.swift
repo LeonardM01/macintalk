@@ -69,8 +69,14 @@ struct MenuBarContent: View {
     }
 
     private var statusDot: some View {
-        let isReady = readiness?.isReadyForDictation == true
-        let color = isReady ? AppTheme.success : AppTheme.warning
+        let color: Color
+        if readiness == nil {
+            color = AppTheme.textTertiary
+        } else if readiness?.isReadyForDictation == true {
+            color = AppTheme.success
+        } else {
+            color = AppTheme.warning
+        }
         return Circle()
             .fill(color)
             .frame(width: 7, height: 7)

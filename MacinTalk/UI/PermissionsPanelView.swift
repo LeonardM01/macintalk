@@ -1,5 +1,29 @@
 import SwiftUI
 
+private enum PermissionRowState: Equatable {
+    case unknown
+    case granted
+    case denied
+    case informational
+
+    var glyph: String {
+        switch self {
+        case .unknown: "circle.dotted"
+        case .granted: "checkmark.circle.fill"
+        case .denied, .informational: "exclamationmark.circle.fill"
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .unknown: AppTheme.textTertiary
+        case .granted: AppTheme.success
+        case .denied: AppTheme.warning
+        case .informational: AppTheme.textSecondary
+        }
+    }
+}
+
 struct PermissionsPanelView: View {
     let readiness: PermissionReadiness?
     let isPreparingSpeechAssets: Bool
@@ -53,7 +77,7 @@ struct PermissionsPanelView: View {
 
     private var microphoneRow: some View {
         row(
-            glyph: glyph(for: readiness?.microphoneGranted),
+            state: rowState(for: readiness?.microphoneGranted),
             title: "Microphone",
             description: "Required to capture your voice.",
             actionTitle: readiness == nil ? nil : (readiness?.microphoneGranted == true ? nil : "Grant Access"),
@@ -63,7 +87,7 @@ struct PermissionsPanelView: View {
 
     private var inputMonitoringRow: some View {
         row(
-            glyph: glyph(for: readiness?.inputMonitoringGranted),
+            state: rowState(for: readiness?.inputMonitoringGranted),
             title: "Input Monitoring",
             description: "Required for the global hold-to-talk hotkey.",
             actionTitle: readiness == nil ? nil : (readiness?.inputMonitoringGranted == true ? nil : "Open Settings…"),
@@ -73,7 +97,7 @@ struct PermissionsPanelView: View {
 
     private var accessibilityRow: some View {
         row(
-            glyph: glyph(for: readiness?.postEventGranted),
+            state: rowState(for: readiness?.postEventGranted),
             title: "Accessibility (Post Event)",
             description: "Required to paste text into other apps.",
             actionTitle: readiness == nil ? nil : (readiness?.postEventGranted == true ? nil : "Open Settings…"),
@@ -83,7 +107,7 @@ struct PermissionsPanelView: View {
 
     private var speechLanguageRow: some View {
         row(
-            glyph: glyph(for: readiness?.speechLocaleSupported),
+            state: rowState(for: readiness?.speechLocaleSupported),
             title: "Speech Language",
             description: speechLocaleDetail,
             actionTitle: nil,
@@ -138,11 +162,16 @@ struct PermissionsPanelView: View {
         }
     }
 
+    private var appleIntelligenceState: PermissionRowState {
+        guard let readiness else { return .unknown }
+        return readiness.appleIntelligenceAvailable ? .granted : .informational
+    }
+
     private var appleIntelligenceRow: some View {
         HStack(alignment: .top, spacing: 11) {
-            Image(systemName: readiness?.appleIntelligenceAvailable == true ? "checkmark.circle.fill" : "exclamationmark.circle.fill")
+            Image(systemName: appleIntelligenceState.glyph)
                 .font(.system(size: 13))
-                .foregroundStyle(readiness == nil ? AppTheme.textTertiary : (readiness?.appleIntelligenceAvailable == true ? AppTheme.success : AppTheme.textSecondary))
+                .foregroundStyle(appleIntelligenceState.color)
 
             VStack(alignment: .leading, spacing: 3) {
                 Text("Apple Intelligence")
@@ -172,16 +201,16 @@ struct PermissionsPanelView: View {
 
     @ViewBuilder
     private func row(
-        glyph: String,
+        state: PermissionRowState,
         title: String,
         description: String,
         actionTitle: String?,
         action: @escaping () -> Void
     ) -> some View {
         HStack(alignment: .top, spacing: 11) {
-            Image(systemName: glyph)
+            Image(systemName: state.glyph)
                 .font(.system(size: 13))
-                .foregroundStyle(color(for: glyphState(for: title)))
+                .foregroundStyle(state.color)
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(title)
@@ -198,7 +227,7 @@ struct PermissionsPanelView: View {
             if let actionTitle {
                 Button(actionTitle, action: action)
                     .font(.system(size: 11.5, weight: .medium))
-            } else if readiness == nil {
+            } else if state == .unknown {
                 Text("Checking…")
                     .font(.system(size: 11.5))
                     .foregroundStyle(AppTheme.textTertiary)
@@ -213,14 +242,9 @@ struct PermissionsPanelView: View {
         }
     }
 
-    private func glyphState(for title: String) -> Bool? {
-        switch title {
-        case "Microphone": readiness?.microphoneGranted
-        case "Input Monitoring": readiness?.inputMonitoringGranted
-        case "Accessibility (Post Event)": readiness?.postEventGranted
-        case "Speech Language": readiness?.speechLocaleSupported
-        default: nil
-        }
+    private func rowState(for granted: Bool?) -> PermissionRowState {
+        guard let granted else { return .unknown }
+        return granted ? .granted : .denied
     }
 
     private func glyph(for granted: Bool?) -> String {

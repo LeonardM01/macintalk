@@ -58,11 +58,11 @@ struct UsageStatsCalculatorTests {
 
     @Test func usesMeasuredDurationWhenPresent() {
         let entries = [
-            UsageStatsCalculator.Entry(createdAt: now, wordCount: 40, durationSeconds: 30)
+            UsageStatsCalculator.Entry(createdAt: now, wordCount: 300, durationSeconds: 30)
         ]
 
         let stats = UsageStatsCalculator.stats(for: entries, now: now, calendar: calendar)
-        #expect(stats.minutesSavedToday == 1)
+        #expect(stats.minutesSavedToday == 7)
     }
 
     @Test func fallsBackToSpeakingEstimateWhenDurationIsNil() {

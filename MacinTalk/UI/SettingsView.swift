@@ -11,7 +11,6 @@ struct SettingsView: View {
     let onRefresh: () -> Void
 
     @State private var inputDevices = AudioInputDeviceDiscovery.availableDevices()
-    @State private var isRefreshingDevices = false
 
     var body: some View {
         ScrollView {
@@ -93,7 +92,7 @@ struct SettingsView: View {
                 Button {
                     refreshInputDevices()
                 } label: {
-                    Text(isRefreshingDevices ? "Refreshing…" : "Refresh Devices")
+                    Text("Refresh Devices")
                         .font(.system(size: 11.5))
                         .foregroundStyle(AppTheme.textSecondary)
                 }
@@ -172,14 +171,12 @@ struct SettingsView: View {
     }
 
     private func refreshInputDevices() {
-        isRefreshingDevices = true
         inputDevices = AudioInputDeviceDiscovery.availableDevices()
         if !settings.selectedInputDeviceID.isEmpty,
            !inputDevices.contains(where: { $0.id == settings.selectedInputDeviceID }) {
             settings.selectedInputDeviceID = AudioInputDevice.systemDefaultID
             coordinator.applyInputDeviceChange()
         }
-        isRefreshingDevices = false
     }
 }
 

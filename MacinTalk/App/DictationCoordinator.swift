@@ -349,6 +349,7 @@ final class DictationCoordinator {
                 )
             }
         } catch {
+            recordingStartedAt = nil
             snapshot.phase = .failed(mapFinishError(error))
             snapshot.statusMessage = error.localizedDescription
         }

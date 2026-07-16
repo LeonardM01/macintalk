@@ -38,7 +38,7 @@ struct TranscriptionHistoryStoreTests {
             rawText: "um hi",
             cleanedText: "Hi.",
             style: .casual,
-            durationSeconds: nil
+            durationSeconds: 4.5
         )
 
         let descriptor = FetchDescriptor<TranscriptionRecord>(
@@ -48,6 +48,7 @@ struct TranscriptionHistoryStoreTests {
         #expect(records.count == 1)
         #expect(records.first?.id == id)
         #expect(records.first?.rawText == "um hi")
+        #expect(records.first?.durationSeconds == 4.5)
 
         try store.markInsertionResult(id: id, succeeded: true, errorMessage: nil)
         let updated = try context.fetch(descriptor).first

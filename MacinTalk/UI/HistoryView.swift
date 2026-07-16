@@ -134,6 +134,7 @@ struct HistoryView: View {
 
                         HStack(spacing: 8) {
                             CopyCleanedButton(record: record)
+                                .id(record.id)
                             DeleteRecordButton {
                                 deleteRecord(record)
                             }
@@ -183,13 +184,14 @@ struct HistoryView: View {
     }
 
     private func deleteRecord(_ record: TranscriptionRecord) {
-        let currentIndex = records.firstIndex { $0.id == record.id }
+        let deletedID = record.id
+        let currentIndex = records.firstIndex { $0.id == deletedID }
         modelContext.delete(record)
         try? modelContext.save()
 
-        if selectedRecordID == record.id {
+        if selectedRecordID == deletedID {
             if let currentIndex {
-                let remaining = records.filter { $0.id != record.id }
+                let remaining = records.filter { $0.id != deletedID }
                 if currentIndex < remaining.count {
                     selectedRecordID = remaining[currentIndex].id
                 } else {
