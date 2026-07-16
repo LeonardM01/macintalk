@@ -10,6 +10,7 @@ final class TranscriptionRecord {
     var writingStyleRaw: String
     var insertionSucceeded: Bool?
     var insertionErrorMessage: String?
+    var durationSeconds: Double?
 
     init(
         id: UUID = UUID(),
@@ -17,6 +18,7 @@ final class TranscriptionRecord {
         rawText: String,
         cleanedText: String,
         writingStyle: WritingStyle,
+        durationSeconds: Double? = nil,
         insertionSucceeded: Bool? = nil,
         insertionErrorMessage: String? = nil
     ) {
@@ -25,6 +27,7 @@ final class TranscriptionRecord {
         self.rawText = rawText
         self.cleanedText = cleanedText
         self.writingStyleRaw = writingStyle.rawValue
+        self.durationSeconds = durationSeconds
         self.insertionSucceeded = insertionSucceeded
         self.insertionErrorMessage = insertionErrorMessage
     }
@@ -37,5 +40,9 @@ final class TranscriptionRecord {
         let text = cleanedText.trimmingCharacters(in: .whitespacesAndNewlines)
         if text.isEmpty { return rawText }
         return text
+    }
+
+    var wordCount: Int {
+        WordCounter.count(cleanedText)
     }
 }

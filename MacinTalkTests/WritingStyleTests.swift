@@ -37,10 +37,11 @@ struct TranscriptionHistoryStoreTests {
         let id = try store.save(
             rawText: "um hi",
             cleanedText: "Hi.",
-            style: .casual
+            style: .casual,
+            durationSeconds: nil
         )
 
-        var descriptor = FetchDescriptor<TranscriptionRecord>(
+        let descriptor = FetchDescriptor<TranscriptionRecord>(
             sortBy: [SortDescriptor(\.createdAt, order: .reverse)]
         )
         let records = try context.fetch(descriptor)
@@ -55,8 +56,8 @@ struct TranscriptionHistoryStoreTests {
         try store.delete(id: id)
         #expect(try context.fetch(descriptor).isEmpty)
 
-        _ = try store.save(rawText: "a", cleanedText: "A", style: .business)
-        _ = try store.save(rawText: "b", cleanedText: "B", style: .balanced)
+        _ = try store.save(rawText: "a", cleanedText: "A", style: .business, durationSeconds: nil)
+        _ = try store.save(rawText: "b", cleanedText: "B", style: .balanced, durationSeconds: nil)
         try store.deleteAll()
         #expect(try context.fetch(descriptor).isEmpty)
     }

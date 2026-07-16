@@ -31,6 +31,8 @@
 		B122 /* MicrophoneCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = F124 /* MicrophoneCapture.swift */; };
 		B123 /* AudioInputDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F125 /* AudioInputDevice.swift */; };
 		B124 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F126 /* Assets.xcassets */; };
+		B125 /* UsageStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = F127 /* UsageStats.swift */; };
+		B126 /* HistoryGrouping.swift in Sources */ = {isa = PBXBuildFile; fileRef = F128 /* HistoryGrouping.swift */; };
 		B201 /* MockServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = F201 /* MockServices.swift */; };
 		B202 /* DictationStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F202 /* DictationStateTests.swift */; };
 		B203 /* DictationCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F203 /* DictationCoordinatorTests.swift */; };
@@ -38,6 +40,8 @@
 		B205 /* WritingStyleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F205 /* WritingStyleTests.swift */; };
 		B206 /* SpeechLocaleResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F206 /* SpeechLocaleResolverTests.swift */; };
 		B207 /* DictationShortcutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F207 /* DictationShortcutTests.swift */; };
+		B208 /* UsageStatsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F208 /* UsageStatsTests.swift */; };
+		B209 /* HistoryGroupingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F209 /* HistoryGroupingTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +81,8 @@
 		F124 /* MicrophoneCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneCapture.swift; sourceTree = "<group>"; };
 		F125 /* AudioInputDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputDevice.swift; sourceTree = "<group>"; };
 		F126 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F127 /* UsageStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageStats.swift; sourceTree = "<group>"; };
+		F128 /* HistoryGrouping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryGrouping.swift; sourceTree = "<group>"; };
 		F201 /* MockServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServices.swift; sourceTree = "<group>"; };
 		F202 /* DictationStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationStateTests.swift; sourceTree = "<group>"; };
 		F203 /* DictationCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationCoordinatorTests.swift; sourceTree = "<group>"; };
@@ -84,6 +90,8 @@
 		F205 /* WritingStyleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingStyleTests.swift; sourceTree = "<group>"; };
 		F206 /* SpeechLocaleResolverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechLocaleResolverTests.swift; sourceTree = "<group>"; };
 		F207 /* DictationShortcutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictationShortcutTests.swift; sourceTree = "<group>"; };
+		F208 /* UsageStatsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageStatsTests.swift; sourceTree = "<group>"; };
+		F209 /* HistoryGroupingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryGroupingTests.swift; sourceTree = "<group>"; };
 		P101 /* MacinTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacinTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		P102 /* MacinTalkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacinTalkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -214,6 +222,8 @@
 			children = (
 				F116 /* TranscriptionRecord.swift */,
 				F117 /* TranscriptionHistoryStore.swift */,
+				F127 /* UsageStats.swift */,
+				F128 /* HistoryGrouping.swift */,
 			);
 			path = History;
 			sourceTree = "<group>";
@@ -228,6 +238,8 @@
 				F205 /* WritingStyleTests.swift */,
 				F206 /* SpeechLocaleResolverTests.swift */,
 				F207 /* DictationShortcutTests.swift */,
+				F208 /* UsageStatsTests.swift */,
+				F209 /* HistoryGroupingTests.swift */,
 			);
 			path = MacinTalkTests;
 			sourceTree = "<group>";
@@ -385,6 +397,8 @@
 				B117 /* HomeView.swift in Sources */,
 				B118 /* SettingsView.swift in Sources */,
 				B121 /* ShortcutRecorderView.swift in Sources */,
+				B125 /* UsageStats.swift in Sources */,
+				B126 /* HistoryGrouping.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -399,6 +413,8 @@
 				B205 /* WritingStyleTests.swift in Sources */,
 				B206 /* SpeechLocaleResolverTests.swift in Sources */,
 				B207 /* DictationShortcutTests.swift in Sources */,
+				B208 /* UsageStatsTests.swift in Sources */,
+				B209 /* HistoryGroupingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

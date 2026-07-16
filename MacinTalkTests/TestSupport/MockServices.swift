@@ -116,6 +116,7 @@ final class MockHistoryStore: TranscriptionHistoryStoring {
         let rawText: String
         let cleanedText: String
         let style: WritingStyle
+        var durationSeconds: Double?
         var insertionSucceeded: Bool?
         var insertionErrorMessage: String?
     }
@@ -124,13 +125,14 @@ final class MockHistoryStore: TranscriptionHistoryStoring {
     var saveError: Error?
     var markInsertionError: Error?
 
-    func save(rawText: String, cleanedText: String, style: WritingStyle) throws -> UUID {
+    func save(rawText: String, cleanedText: String, style: WritingStyle, durationSeconds: Double?) throws -> UUID {
         if let saveError { throw saveError }
         let record = SavedRecord(
             id: UUID(),
             rawText: rawText,
             cleanedText: cleanedText,
-            style: style
+            style: style,
+            durationSeconds: durationSeconds
         )
         records.append(record)
         return record.id
