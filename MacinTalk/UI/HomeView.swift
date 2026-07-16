@@ -1,228 +1,237 @@
 import AppKit
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct HomeView: View {
     @Bindable var coordinator: DictationCoordinator
-    @Environment(\.modelContext) private var modelContext
+    @Bindable var settings: AppSettings
+    @Binding var selection: MainSection
+    @Binding var selectedRecordID: UUID?
+
     @Query(sort: \TranscriptionRecord.createdAt, order: .reverse) private var records: [TranscriptionRecord]
-    @State private var selectedRecordID: UUID?
 
     var body: some View {
-        NavigationSplitView {
-            VStack(alignment: .leading, spacing: 16) {
-                statusCard
+        VStack(spacing: 0) {
+            Spacer()
 
-                HStack {
-                    Text("History")
-                        .font(.title2)
-                        .bold()
-                    Spacer()
-                    if !records.isEmpty {
-                        Button("Clear All", role: .destructive) {
-                            clearAllHistory()
-                        }
+            VStack(spacing: 16) {
+                switch coordinator.snapshot.phase {
+                case .idle:
+                    idleContent
+                case .recording:
+                    recordingContent
+                case .cleaning, .inserting:
+                    busyContent
+                case .failed:
+                    failedContent
+                }
+            }
+            .offset(y: -14)
+
+            Spacer()
+
+            if !recentRecords.isEmpty {
+                recentList
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(escapeShortcut)
+    }
+
+    private var recentRecords: [TranscriptionRecord] {
+        Array(records.prefix(3))
+    }
+
+    private var usageStats: UsageStats {
+        UsageStatsCalculator.stats(for: records.map {
+            UsageStatsCalculator.Entry(createdAt: $0.createdAt, wordCount: $0.wordCount, durationSeconds: $0.durationSeconds)
+        })
+    }
+
+    @ViewBuilder
+    private var escapeShortcut: some View {
+        if coordinator.snapshot.phase == .recording {
+            Button("") {
+                coordinator.cancelRecording()
+            }
+            .keyboardShortcut(.cancelAction)
+            .opacity(0)
+            .frame(width: 0, height: 0)
+        }
+    }
+
+    private var idleContent: some View {
+        VStack(spacing: 16) {
+            DictationOrb(isRecording: false)
+
+            Text("Ready to dictate")
+                .font(.system(size: 22, weight: .semibold))
+                .tracking(-0.3)
+                .foregroundStyle(AppTheme.textPrimary)
+
+            HStack(spacing: 6) {
+                Text("Hold")
+                    .font(.system(size: 13))
+                    .foregroundStyle(AppTheme.textSecondary)
+                ShortcutKeycapsView(shortcut: settings.dictationShortcut)
+                Text("anywhere")
+                    .font(.system(size: 13))
+                    .foregroundStyle(AppTheme.textSecondary)
+            }
+
+            Button("Start Dictation") {
+                coordinator.manualStart()
+            }
+            .buttonStyle(.accent(AppTheme.accent))
+
+            Text("Today · \(usageStats.wordsToday) words · \(usageStats.minutesSavedToday) min saved · \(settings.writingStyle.title) style")
+                .font(.system(size: 12))
+                .monospacedDigit()
+                .foregroundStyle(AppTheme.textTertiary)
+        }
+    }
+
+    private var recordingContent: some View {
+        VStack(spacing: 16) {
+            DictationOrb(isRecording: true)
+
+            Text("Listening…")
+                .font(.system(size: 22, weight: .semibold))
+                .tracking(-0.3)
+                .foregroundStyle(AppTheme.textPrimary)
+
+            Text("Release \(settings.dictationShortcut.displayString) or click Stop to insert")
+                .font(.system(size: 13))
+                .foregroundStyle(AppTheme.textSecondary)
+
+            liveTranscriptBox
+
+            Button("Stop & Insert") {
+                coordinator.manualStop()
+            }
+            .buttonStyle(.accent(AppTheme.danger))
+        }
+    }
+
+    private var liveTranscriptBox: some View {
+        HStack(alignment: .top, spacing: 0) {
+            Text(coordinator.snapshot.displayTranscript)
+                .font(.system(size: 13.5))
+                .lineSpacing(13.5 * 0.55)
+                .foregroundStyle(AppTheme.textPrimary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            RoundedRectangle(cornerRadius: 1, style: .continuous)
+                .fill(AppTheme.accent)
+                .frame(width: 2, height: 14)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 13)
+        .frame(width: 560, alignment: .leading)
+        .frame(minHeight: 64)
+        .glassCard()
+    }
+
+    private var busyContent: some View {
+        VStack(spacing: 16) {
+            DictationOrb(isRecording: false)
+
+            Text(coordinator.snapshot.statusMessage)
+                .font(.system(size: 15))
+                .foregroundStyle(AppTheme.textSecondary)
+        }
+    }
+
+    private var failedContent: some View {
+        VStack(spacing: 16) {
+            DictationOrb(isRecording: false)
+
+            Text("Ready to dictate")
+                .font(.system(size: 22, weight: .semibold))
+                .tracking(-0.3)
+                .foregroundStyle(AppTheme.textPrimary)
+
+            Text(coordinator.snapshot.statusMessage)
+                .font(.system(size: 13))
+                .foregroundStyle(AppTheme.danger)
+
+            Button("Start Dictation") {
+                coordinator.manualStart()
+            }
+            .buttonStyle(.accent(AppTheme.accent))
+        }
+    }
+
+    private var recentList: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text("RECENT")
+                    .font(.system(size: 11, weight: .semibold))
+                    .tracking(0.7)
+                    .foregroundStyle(AppTheme.textTertiary)
+                Spacer()
+                Button("Show all history") {
+                    selection = .history
+                }
+                .buttonStyle(.plain)
+                .font(.system(size: 11.5))
+                .foregroundStyle(Color(red: 0x7c / 255, green: 0xb8 / 255, blue: 1))
+            }
+
+            VStack(spacing: 0) {
+                ForEach(recentRecords) { record in
+                    RecentRow(record: record) {
+                        selectedRecordID = record.id
+                        selection = .history
                     }
                 }
-
-                if records.isEmpty {
-                    ContentUnavailableView(
-                        "No transcriptions yet",
-                        systemImage: "text.bubble",
-                        description: Text("Hold Control+Option+Space to dictate. Your cleaned transcripts will appear here.")
-                    )
-                } else {
-                    List(records, selection: $selectedRecordID) { record in
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(record.previewText)
-                                .lineLimit(2)
-                            HStack(spacing: 8) {
-                                Text(record.createdAt, style: .date)
-                                Text(record.createdAt, style: .time)
-                                Text(record.writingStyle.title)
-                                    .font(.caption)
-                                    .padding(.horizontal, 6)
-                                    .padding(.vertical, 2)
-                                    .background(.quaternary, in: Capsule())
-                                if let succeeded = record.insertionSucceeded {
-                                    Image(systemName: succeeded ? "checkmark.circle.fill" : "xmark.circle.fill")
-                                        .foregroundStyle(succeeded ? .green : .orange)
-                                }
-                            }
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        }
-                        .tag(record.id)
-                    }
-                }
-            }
-            .padding()
-            .navigationSplitViewColumnWidth(min: 280, ideal: 340)
-        } detail: {
-            if let record = selectedRecord {
-                TranscriptionDetailView(record: record, onDelete: {
-                    deleteRecord(record)
-                })
-            } else {
-                ContentUnavailableView(
-                    "Select a transcription",
-                    systemImage: "doc.text",
-                    description: Text("Choose an item from the list to view raw and cleaned text.")
-                )
             }
         }
-        .onChange(of: records.count) { _, _ in
-            if let selectedRecordID, !records.contains(where: { $0.id == selectedRecordID }) {
-                self.selectedRecordID = records.first?.id
-            } else if selectedRecordID == nil {
-                selectedRecordID = records.first?.id
-            }
-        }
-        .onAppear {
-            if selectedRecordID == nil {
-                selectedRecordID = records.first?.id
-            }
-        }
-    }
-
-    private var selectedRecord: TranscriptionRecord? {
-        guard let selectedRecordID else { return nil }
-        return records.first { $0.id == selectedRecordID }
-    }
-
-    private var statusCard: some View {
-        GroupBox {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Label(statusTitle, systemImage: statusIcon)
-                        .font(.headline)
-                    Spacer()
-                    if coordinator.snapshot.phase == .recording {
-                        ProgressView()
-                            .controlSize(.small)
-                    }
-                }
-
-                Text(coordinator.snapshot.statusMessage)
-                    .foregroundStyle(.secondary)
-
-                if !coordinator.snapshot.displayTranscript.isEmpty {
-                    Text(coordinator.snapshot.displayTranscript)
-                        .font(.body)
-                        .textSelection(.enabled)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(8)
-                        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 8))
-                }
-
-                HStack {
-                    if coordinator.snapshot.phase == .recording {
-                        Button("Stop Dictation") {
-                            coordinator.manualStop()
-                        }
-                    } else {
-                        Button("Start Dictation") {
-                            coordinator.manualStart()
-                        }
-                    }
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        } label: {
-            Text("Live Dictation")
-        }
-    }
-
-    private var statusTitle: String {
-        switch coordinator.snapshot.phase {
-        case .idle: "Idle"
-        case .recording: "Recording"
-        case .cleaning: "Cleaning"
-        case .inserting: "Inserting"
-        case .failed: "Error"
-        }
-    }
-
-    private var statusIcon: String {
-        switch coordinator.snapshot.phase {
-        case .idle: "mic"
-        case .recording: "mic.fill"
-        case .cleaning, .inserting: "ellipsis.circle"
-        case .failed: "exclamationmark.triangle"
-        }
-    }
-
-    private func deleteRecord(_ record: TranscriptionRecord) {
-        modelContext.delete(record)
-        try? modelContext.save()
-        if selectedRecordID == record.id {
-            selectedRecordID = nil
-        }
-    }
-
-    private func clearAllHistory() {
-        for record in records {
-            modelContext.delete(record)
-        }
-        try? modelContext.save()
-        selectedRecordID = nil
+        .padding(.horizontal, 34)
+        .padding(.bottom, 22)
     }
 }
 
-private struct TranscriptionDetailView: View {
+private struct RecentRow: View {
     let record: TranscriptionRecord
-    let onDelete: () -> Void
+    let onSelect: () -> Void
+
+    @State private var isHovering = false
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(record.createdAt.formatted(date: .abbreviated, time: .shortened))
-                            .font(.headline)
-                        Text(record.writingStyle.title)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                    }
-                    Spacer()
-                    Button("Copy Cleaned") {
-                        copyToClipboard(record.cleanedText)
-                    }
-                    Button("Delete", role: .destructive, action: onDelete)
-                }
+        Button(action: onSelect) {
+            HStack(spacing: 10) {
+                Text(record.createdAt, style: .time)
+                    .font(.system(size: 11))
+                    .monospacedDigit()
+                    .foregroundStyle(AppTheme.textPrimary.opacity(0.4))
+                    .frame(width: 38, alignment: .leading)
 
-                if let succeeded = record.insertionSucceeded {
-                    Label(
-                        succeeded ? "Inserted into active app" : "Insertion failed",
-                        systemImage: succeeded ? "checkmark.circle" : "xmark.circle"
-                    )
-                    .foregroundStyle(succeeded ? .green : .orange)
+                Text(record.previewText)
+                    .font(.system(size: 12.5))
+                    .foregroundStyle(AppTheme.textPrimary.opacity(0.85))
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
-                    if let message = record.insertionErrorMessage, !message.isEmpty {
-                        Text(message)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
+                StylePill(title: record.writingStyle.title)
 
-                GroupBox("Cleaned Text") {
-                    Text(record.cleanedText)
-                        .textSelection(.enabled)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-
-                GroupBox("Raw Transcript") {
-                    Text(record.rawText)
-                        .textSelection(.enabled)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                if record.insertionSucceeded == true {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundStyle(AppTheme.success)
                 }
             }
-            .padding()
+            .padding(.horizontal, 2)
+            .padding(.vertical, 8)
+            .background(isHovering ? Color.white.opacity(0.03) : Color.clear)
+            .overlay(alignment: .top) {
+                Rectangle()
+                    .fill(Color.white.opacity(0.06))
+                    .frame(height: 1)
+            }
         }
-    }
-
-    private func copyToClipboard(_ text: String) {
-        NSPasteboard.general.clearContents()
-        NSPasteboard.general.setString(text, forType: .string)
+        .buttonStyle(.plain)
+        .onHover { isHovering = $0 }
     }
 }

@@ -86,7 +86,10 @@ struct MacinTalkApp: App {
                 }
             )
             .modelContainer(modelContainer)
+            .preferredColorScheme(.dark)
         }
+        .windowStyle(.hiddenTitleBar)
+        .defaultSize(width: 980, height: 660)
         .defaultLaunchBehavior(.presented)
         .commands {
             SidebarCommands()
