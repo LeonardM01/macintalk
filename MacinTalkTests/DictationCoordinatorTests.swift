@@ -210,6 +210,32 @@ struct DictationCoordinatorTests {
     #expect(coordinator.snapshot.statusMessage.contains("Could not save to history"))
   }
 
+  @Test func durationExcludesCleaningTime() async throws {
+    let speech = MockSpeechService()
+    speech.stopResult = "hello there"
+    let cleaner = MockCleaner()
+    cleaner.cleanedText = "Hello there."
+    cleaner.cleanDelayMilliseconds = 200
+    let inserter = MockInserter()
+    let history = MockHistoryStore()
+    let coordinator = makeCoordinator(
+      speech: speech,
+      cleaner: cleaner,
+      inserter: inserter,
+      history: history
+    )
+
+    await coordinator.start()
+    coordinator.manualStart()
+    try? await Task.sleep(for: .milliseconds(100))
+    coordinator.manualStop()
+    try? await Task.sleep(for: .milliseconds(500))
+
+    #expect(history.records.count == 1)
+    let duration = try #require(history.records.first?.durationSeconds)
+    #expect(duration < 0.15)
+  }
+
   @Test func quickReleaseDuringStartupDoesNotEnterFailureState() async {
     let speech = MockSpeechService()
     speech.startDelayMilliseconds = 200

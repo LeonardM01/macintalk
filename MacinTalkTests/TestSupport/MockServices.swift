@@ -37,6 +37,7 @@ final class MockSpeechService: SpeechTranscribing, @unchecked Sendable {
 final class MockCleaner: TranscriptCleaning, @unchecked Sendable {
     var isAvailable = true
     var cleanedText = "Hello world."
+    var cleanDelayMilliseconds: UInt64 = 0
     private(set) var prewarmCount = 0
     private(set) var cleanCount = 0
     private(set) var lastPrewarmStyle: WritingStyle?
@@ -50,6 +51,9 @@ final class MockCleaner: TranscriptCleaning, @unchecked Sendable {
     func clean(_ transcript: String, style: WritingStyle) async -> String {
         cleanCount += 1
         lastCleanStyle = style
+        if cleanDelayMilliseconds > 0 {
+            try? await Task.sleep(for: .milliseconds(cleanDelayMilliseconds))
+        }
         return cleanedText
     }
 }

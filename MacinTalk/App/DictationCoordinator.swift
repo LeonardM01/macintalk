@@ -268,6 +268,9 @@ final class DictationCoordinator {
 
         do {
             let rawTranscript = try await speechService.stopRecording()
+            let durationSeconds = elapsedRecordingSeconds()
+            recordingStartedAt = nil
+
             let trimmed = rawTranscript.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !trimmed.isEmpty else {
                 resetAfterCancelledStart()
@@ -279,9 +282,6 @@ final class DictationCoordinator {
 
             let cleaned = await cleaner.clean(trimmed, style: settings.writingStyle)
             let output = cleaned.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? trimmed : cleaned
-
-            let durationSeconds = elapsedRecordingSeconds()
-            recordingStartedAt = nil
 
             var historyID: UUID?
             var historyStatusMessage: String?
