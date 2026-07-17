@@ -37,6 +37,7 @@ final class MockSpeechService: SpeechTranscribing, @unchecked Sendable {
 final class MockCleaner: TranscriptCleaning, @unchecked Sendable {
     var isAvailable = true
     var cleanedText = "Hello world."
+    var cleanDelayMilliseconds: UInt64 = 0
     private(set) var prewarmCount = 0
     private(set) var cleanCount = 0
     private(set) var lastPrewarmStyle: WritingStyle?
@@ -50,6 +51,9 @@ final class MockCleaner: TranscriptCleaning, @unchecked Sendable {
     func clean(_ transcript: String, style: WritingStyle) async -> String {
         cleanCount += 1
         lastCleanStyle = style
+        if cleanDelayMilliseconds > 0 {
+            try? await Task.sleep(for: .milliseconds(cleanDelayMilliseconds))
+        }
         return cleanedText
     }
 }
@@ -116,6 +120,7 @@ final class MockHistoryStore: TranscriptionHistoryStoring {
         let rawText: String
         let cleanedText: String
         let style: WritingStyle
+        var durationSeconds: Double?
         var insertionSucceeded: Bool?
         var insertionErrorMessage: String?
     }
@@ -124,13 +129,14 @@ final class MockHistoryStore: TranscriptionHistoryStoring {
     var saveError: Error?
     var markInsertionError: Error?
 
-    func save(rawText: String, cleanedText: String, style: WritingStyle) throws -> UUID {
+    func save(rawText: String, cleanedText: String, style: WritingStyle, durationSeconds: Double?) throws -> UUID {
         if let saveError { throw saveError }
         let record = SavedRecord(
             id: UUID(),
             rawText: rawText,
             cleanedText: cleanedText,
-            style: style
+            style: style,
+            durationSeconds: durationSeconds
         )
         records.append(record)
         return record.id

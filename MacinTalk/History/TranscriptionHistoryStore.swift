@@ -6,7 +6,8 @@ protocol TranscriptionHistoryStoring: AnyObject {
     func save(
         rawText: String,
         cleanedText: String,
-        style: WritingStyle
+        style: WritingStyle,
+        durationSeconds: Double?
     ) throws -> UUID
 
     func markInsertionResult(
@@ -30,12 +31,14 @@ final class SwiftDataTranscriptionHistoryStore: TranscriptionHistoryStoring {
     func save(
         rawText: String,
         cleanedText: String,
-        style: WritingStyle
+        style: WritingStyle,
+        durationSeconds: Double?
     ) throws -> UUID {
         let record = TranscriptionRecord(
             rawText: rawText,
             cleanedText: cleanedText,
-            writingStyle: style
+            writingStyle: style,
+            durationSeconds: durationSeconds
         )
         modelContext.insert(record)
         try modelContext.save()

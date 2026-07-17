@@ -37,16 +37,18 @@ struct TranscriptionHistoryStoreTests {
         let id = try store.save(
             rawText: "um hi",
             cleanedText: "Hi.",
-            style: .casual
+            style: .casual,
+            durationSeconds: 4.5
         )
 
-        var descriptor = FetchDescriptor<TranscriptionRecord>(
+        let descriptor = FetchDescriptor<TranscriptionRecord>(
             sortBy: [SortDescriptor(\.createdAt, order: .reverse)]
         )
         let records = try context.fetch(descriptor)
         #expect(records.count == 1)
         #expect(records.first?.id == id)
         #expect(records.first?.rawText == "um hi")
+        #expect(records.first?.durationSeconds == 4.5)
 
         try store.markInsertionResult(id: id, succeeded: true, errorMessage: nil)
         let updated = try context.fetch(descriptor).first
@@ -55,8 +57,8 @@ struct TranscriptionHistoryStoreTests {
         try store.delete(id: id)
         #expect(try context.fetch(descriptor).isEmpty)
 
-        _ = try store.save(rawText: "a", cleanedText: "A", style: .business)
-        _ = try store.save(rawText: "b", cleanedText: "B", style: .balanced)
+        _ = try store.save(rawText: "a", cleanedText: "A", style: .business, durationSeconds: nil)
+        _ = try store.save(rawText: "b", cleanedText: "B", style: .balanced, durationSeconds: nil)
         try store.deleteAll()
         #expect(try context.fetch(descriptor).isEmpty)
     }

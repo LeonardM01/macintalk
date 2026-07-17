@@ -70,6 +70,7 @@ struct PermissionReadiness: Equatable, Sendable {
 final class DictationCoordinator {
     private(set) var snapshot = DictationSnapshot.initial
     private(set) var isPreparingSpeechAssets = false
+    private(set) var lastInsertionEvent: InsertionEvent?
 
     private let speechService: any SpeechTranscribing
     private let cleaner: any TranscriptCleaning
@@ -83,6 +84,7 @@ final class DictationCoordinator {
     private var isStartingRecording = false
     private var stopRequestedWhileStarting = false
     private var insertionTargetApp: NSRunningApplication?
+    private var recordingStartedAt: ContinuousClock.Instant?
 
     init(
         speechService: any SpeechTranscribing,
@@ -229,6 +231,7 @@ final class DictationCoordinator {
 
         do {
             try await speechService.startRecording()
+            recordingStartedAt = ContinuousClock.now
             if stopRequestedWhileStarting {
                 try? await speechService.stopRecording()
                 resetAfterCancelledStart()
@@ -265,6 +268,9 @@ final class DictationCoordinator {
 
         do {
             let rawTranscript = try await speechService.stopRecording()
+            let durationSeconds = elapsedRecordingSeconds()
+            recordingStartedAt = nil
+
             let trimmed = rawTranscript.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !trimmed.isEmpty else {
                 resetAfterCancelledStart()
@@ -284,7 +290,8 @@ final class DictationCoordinator {
                     historyID = try historyStore.save(
                         rawText: trimmed,
                         cleanedText: output,
-                        style: settings.writingStyle
+                        style: settings.writingStyle,
+                        durationSeconds: durationSeconds
                     )
                 } catch {
                     historyStatusMessage = "Could not save to history: \(error.localizedDescription)"
@@ -316,6 +323,11 @@ final class DictationCoordinator {
                 } else {
                     snapshot.statusMessage = "Inserted text"
                 }
+                lastInsertionEvent = InsertionEvent(
+                    id: UUID(),
+                    message: insertionTarget == nil ? "Copied to clipboard" : "Inserted into active app",
+                    succeeded: true
+                )
             } catch {
                 if let historyID, let historyStore {
                     do {
@@ -330,16 +342,46 @@ final class DictationCoordinator {
                 }
                 snapshot.phase = .failed(mapFinishError(error))
                 snapshot.statusMessage = historyStatusMessage ?? error.localizedDescription
+                lastInsertionEvent = InsertionEvent(
+                    id: UUID(),
+                    message: error.localizedDescription,
+                    succeeded: false
+                )
             }
         } catch {
+            recordingStartedAt = nil
             snapshot.phase = .failed(mapFinishError(error))
             snapshot.statusMessage = error.localizedDescription
         }
     }
 
     private func resetAfterCancelledStart() {
+        recordingStartedAt = nil
         snapshot = DictationSnapshot.initial
         snapshot.statusMessage = settings.dictationShortcut.promptMessage
+    }
+
+    private func elapsedRecordingSeconds() -> Double? {
+        guard let recordingStartedAt else { return nil }
+        let elapsed = recordingStartedAt.duration(to: .now)
+        return Double(elapsed.components.seconds) + Double(elapsed.components.attoseconds) * 1e-18
+    }
+
+    func cancelRecording() {
+        guard snapshot.phase == .recording || isStartingRecording else { return }
+
+        if isStartingRecording {
+            stopRequestedWhileStarting = true
+            return
+        }
+
+        sessionTask?.cancel()
+        sessionTask = Task { @MainActor in
+            _ = try? await self.speechService.stopRecording()
+            self.recordingStartedAt = nil
+            self.snapshot = DictationSnapshot.initial
+            self.snapshot.statusMessage = self.settings.dictationShortcut.promptMessage
+        }
     }
 
     func updateTranscriptFromService() {

@@ -65,6 +65,12 @@ struct DictationSnapshot: Equatable, Sendable {
     )
 }
 
+struct InsertionEvent: Equatable, Sendable {
+    let id: UUID
+    let message: String
+    let succeeded: Bool
+}
+
 enum TranscriptAssembler {
     static func appendFinal(_ stable: String, finalText: String) -> String {
         let addition = finalText.trimmingCharacters(in: .whitespacesAndNewlines)

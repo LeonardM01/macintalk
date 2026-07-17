@@ -13,4 +13,10 @@ xcuserdata/
 *.ipa
 *.dSYM.zip
 *.dSYM
-scripts/
+
+# AI
+CLAUDE*
+.claude
+AGENTS*
+.mcp.json
+LEAN*

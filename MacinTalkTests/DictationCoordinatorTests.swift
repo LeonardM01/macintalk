@@ -210,6 +210,120 @@ struct DictationCoordinatorTests {
     #expect(coordinator.snapshot.statusMessage.contains("Could not save to history"))
   }
 
+  @Test func durationExcludesCleaningTime() async throws {
+    let speech = MockSpeechService()
+    speech.stopResult = "hello there"
+    let cleaner = MockCleaner()
+    cleaner.cleanedText = "Hello there."
+    cleaner.cleanDelayMilliseconds = 200
+    let inserter = MockInserter()
+    let history = MockHistoryStore()
+    let coordinator = makeCoordinator(
+      speech: speech,
+      cleaner: cleaner,
+      inserter: inserter,
+      history: history
+    )
+
+    await coordinator.start()
+    coordinator.manualStart()
+    try? await Task.sleep(for: .milliseconds(100))
+    coordinator.manualStop()
+    try? await Task.sleep(for: .milliseconds(500))
+
+    #expect(history.records.count == 1)
+    let duration = try #require(history.records.first?.durationSeconds)
+    #expect(duration < 0.15)
+  }
+
+  @Test func cancelWhileRecordingDiscardsTranscript() async {
+    let speech = MockSpeechService()
+    let cleaner = MockCleaner()
+    let inserter = MockInserter()
+    let history = MockHistoryStore()
+    let coordinator = makeCoordinator(speech: speech, cleaner: cleaner, inserter: inserter, history: history)
+
+    await coordinator.start()
+    coordinator.manualStart()
+    try? await Task.sleep(for: .milliseconds(100))
+    #expect(coordinator.snapshot.phase == .recording)
+
+    coordinator.cancelRecording()
+    try? await Task.sleep(for: .milliseconds(200))
+
+    #expect(history.records.isEmpty)
+    #expect(cleaner.cleanCount == 0)
+    #expect(inserter.insertedText == nil)
+    #expect(coordinator.snapshot.phase == .idle)
+  }
+
+  @Test func cancelWhileStartingDoesNotLeakSession() async {
+    let speech = MockSpeechService()
+    speech.startDelayMilliseconds = 200
+    let cleaner = MockCleaner()
+    let inserter = MockInserter()
+    let history = MockHistoryStore()
+    let coordinator = makeCoordinator(speech: speech, cleaner: cleaner, inserter: inserter, history: history)
+
+    await coordinator.start()
+    coordinator.manualStart()
+    try? await Task.sleep(for: .milliseconds(20))
+    coordinator.cancelRecording()
+    try? await Task.sleep(for: .milliseconds(400))
+
+    #expect(history.records.isEmpty)
+    #expect(cleaner.cleanCount == 0)
+    #expect(inserter.insertedText == nil)
+    #expect(coordinator.snapshot.phase == .idle)
+  }
+
+  @Test func lastInsertionEventRecordsSuccess() async {
+    let speech = MockSpeechService()
+    speech.stopResult = "hello there"
+    let cleaner = MockCleaner()
+    cleaner.cleanedText = "Hello there."
+    let inserter = MockInserter()
+    let history = MockHistoryStore()
+    let coordinator = makeCoordinator(
+      speech: speech,
+      cleaner: cleaner,
+      inserter: inserter,
+      history: history
+    )
+
+    await coordinator.start()
+    coordinator.manualStart()
+    try? await Task.sleep(for: .milliseconds(100))
+    coordinator.manualStop()
+    try? await Task.sleep(for: .milliseconds(300))
+
+    #expect(coordinator.lastInsertionEvent?.succeeded == true)
+  }
+
+  @Test func lastInsertionEventRecordsFailure() async {
+    let speech = MockSpeechService()
+    speech.stopResult = "hello"
+    let cleaner = MockCleaner()
+    cleaner.cleanedText = "Hello."
+    let inserter = MockInserter()
+    inserter.clipboardError = TextInsertionError.clipboardCopyFailed
+    let history = MockHistoryStore()
+    let coordinator = makeCoordinator(
+      speech: speech,
+      cleaner: cleaner,
+      inserter: inserter,
+      history: history
+    )
+
+    await coordinator.start()
+    coordinator.manualStart()
+    try? await Task.sleep(for: .milliseconds(100))
+    coordinator.manualStop()
+    try? await Task.sleep(for: .milliseconds(300))
+
+    #expect(coordinator.lastInsertionEvent?.succeeded == false)
+  }
+
   @Test func quickReleaseDuringStartupDoesNotEnterFailureState() async {
     let speech = MockSpeechService()
     speech.startDelayMilliseconds = 200

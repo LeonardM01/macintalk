@@ -10,14 +10,7 @@ struct MacinTalkApp: App {
 
     @State private var settings = AppSettings()
     @State private var coordinator: DictationCoordinator
-    @State private var readiness = PermissionReadiness(
-        microphoneGranted: false,
-        inputMonitoringGranted: false,
-        postEventGranted: false,
-        speechLocaleSupported: false,
-        speechAssetsInstalled: false,
-        appleIntelligenceAvailable: false
-    )
+    @State private var readiness: PermissionReadiness?
 
     @State private var didLaunchSetup = false
 
@@ -46,16 +39,18 @@ struct MacinTalkApp: App {
         MenuBarExtra("MacinTalk", systemImage: menuBarIcon) {
             MenuBarContent(
                 coordinator: coordinator,
+                settings: settings,
                 readiness: readiness,
                 onRefresh: { Task { await refreshReadiness() } },
                 onQuit: { NSApplication.shared.terminate(nil) },
                 onLaunch: {
                     await refreshReadinessOnLaunch()
                 },
-                shouldOpenSetup: { !didLaunchSetup && !readiness.isReadyForDictation },
+                shouldOpenSetup: { !didLaunchSetup && !(readiness?.isReadyForDictation ?? false) },
                 onDidOpenSetup: { didLaunchSetup = true }
             )
         }
+        .modelContainer(modelContainer)
         .menuBarExtraStyle(.window)
 
         WindowGroup("MacinTalk", id: "main") {
@@ -86,7 +81,10 @@ struct MacinTalkApp: App {
                 }
             )
             .modelContainer(modelContainer)
+            .preferredColorScheme(.dark)
         }
+        .windowStyle(.hiddenTitleBar)
+        .defaultSize(width: 980, height: 660)
         .defaultLaunchBehavior(.presented)
         .commands {
             SidebarCommands()
@@ -120,6 +118,7 @@ struct MacinTalkApp: App {
                     Task { await refreshReadiness() }
                 }
             )
+            .modelContainer(modelContainer)
         }
         .defaultLaunchBehavior(.suppressed)
     }
