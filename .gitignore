@@ -13,7 +13,6 @@ xcuserdata/
 *.ipa
 *.dSYM.zip
 *.dSYM
-scripts/
 
 # AI
 CLAUDE*
